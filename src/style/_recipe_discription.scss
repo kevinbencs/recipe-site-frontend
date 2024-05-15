@@ -1,0 +1,178 @@
+.recipe-discription{
+
+    .recipe-header{
+        height: 600px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        h2{
+            
+            background-color: green;
+            margin-bottom: 40px;
+            font-size: max(3vw, 30px);
+        }
+        margin-bottom: 60px;
+    }
+    .recipe-main{
+        display: grid;
+        grid-template-areas: 
+        "a b"
+        "c c";
+        margin: {
+            left: calc((100% - 500px - 100px - 255px)/2);
+            right: calc((100% - 500px - 100px - 255px)/2);
+        };
+        .recipe-video-text{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 500px;
+            grid-area: a;
+            margin-right: 100px;
+            iframe{
+                width: 500px;
+                height: calc(315/560*500px);
+                margin-bottom: 40px;
+            }
+            p{
+                white-space: pre-line;
+            }
+        }
+        .recipe-ingredients-container{
+            width: 255px;
+            grid-area: b;
+            .recipe-ingredients{
+                
+                position: sticky;
+                top: 200px;
+                ul{
+                    display: grid;
+                    grid-template-columns: auto;
+                    .ingredient{
+                        margin-bottom: 10px;
+                        margin-top: 10px;
+                        text-align: center;
+                    }
+                }
+                
+
+                .decoration{
+                    clip-path: ellipse(50% 70% at 50% 80%);
+                    width: 255px;
+                    height: 10px;
+                    background-color: $main-background_color;
+                }
+            }
+        }
+        .read-more{
+            font-size: max(2vw,22px);
+            text-align: center;
+            box-shadow: 0 0 10px black;
+            margin-bottom: 20px;
+            grid-area: c;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .read-more:focus{
+            box-shadow: 0 0 20px black;
+        }
+
+        .hide-text{
+            max-height: 200px;
+            overflow: hidden;
+        }
+        .hide-ingredients{
+            max-height: 200px;
+            overflow: hidden;
+        }
+        
+    }
+}
+
+.another-recipes{
+    margin: 80px 0;
+    h2{
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: max(2.5vw, 25px);
+    }
+}
+
+
+@media screen and (max-width: 1000px) {
+    .recipe-discription{
+        .recipe-header{
+            height: 400px;
+        }
+        .recipe-main{
+            grid-template-areas: 
+            "a"
+            "b"
+            "c";
+
+            margin: {
+                left: calc((100% - 500px)/2);
+                right: calc((100% - 500px)/2);
+            };
+
+            .recipe-video-text{
+                margin-right: 0;
+            }
+
+            .recipe-ingredients-container{
+                margin-top: 60px;
+                width: 500px;
+                .recipe-ingredients{
+                    position: static;
+
+                    .decoration{
+                        width: 500px;
+                    }
+                    
+                }
+            }
+
+            .hide-text{
+                max-height: 400px;
+            }
+            .hide-ingredients{
+                height: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 520px){
+    .recipe-discription{
+        .recipe-header{
+            height: 300px;
+        }
+        .recipe-main{
+            margin: {
+                left: 10px;
+                right: 10px;
+
+            };
+            .recipe-video-text{
+                width: 100%;
+
+                iframe{
+                    width: 100%;
+                    height: calc(315/560*(100vw - 20px));
+                }
+            }
+            .recipe-ingredients-container{
+                width: 100%;
+                .recipe-ingredients{
+                    .decoration{
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}

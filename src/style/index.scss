@@ -1,0 +1,285 @@
+@import './_reset';
+@import './font_family.scss';
+@import './_header.scss';
+@import './_footer.scss';
+@import './newsletter';
+@import './cookie';
+@import './recipe_discription';
+@import './signin-signup_forgot_password';
+
+$recipe-background: rgb(180, 224, 178);
+$recipe-background-alpha: rgba(180,224,178,0.5);
+
+/***************************************************************************************************
+home.tsx and search.tsx
+***************************************************************************************************/
+
+.search-section{
+    padding: 120px 0;
+    background-image: url("../img/search_background2.jpg");
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 60px;
+    overflow: hidden;
+
+
+    .form-h2{
+    
+        h2{
+            font-size: max(2.5vw, 35px);
+            position: relative;
+            top: calc(-30px - 2vw);
+            color: $main-text-color;
+            display: inline-block;
+            width: 400px;
+            text-align: center;
+        }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        div{
+            clip-path: ellipse(50% 70% at 50% 50%);
+            width: 600px;
+            height: 20px;
+            background-color: $main-background_color;
+        }
+    }
+    
+    form{
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        
+        .name-search{
+            border: none;
+            display: inline-block;
+            width: 50vw;
+            max-width: 600px;
+            height: 40px;
+            border-radius: 5px 0 0 5px;
+            padding-left: 20px;
+        }
+    
+        .name-search:focus-visible{
+            outline: none;
+        }
+    
+        .submit{
+            border: none;
+            border-radius: 0 5px 5px 0;
+            height: 40px;
+            background-color: lightgray;
+            padding: 5px;
+        }
+    
+        .submit:focus{
+            background-color: whitesmoke;
+        }
+        .submit:hover{
+            background-color: whitesmoke;
+        }
+    
+    }
+    
+
+}
+
+
+/************************************************************************************************
+recipe list card
+************************************************************************************************/
+
+.recipes-container-header{
+    text-align: center;
+    font-size: max(2.5vw, 30px);
+    margin: 30px 0;
+}
+
+#recipes-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 5vw;
+    
+
+    .recipe-item{
+        background-color: $recipe-background;
+        border-radius: 5px;
+        
+        width: 380px;
+        height: 650px;
+        margin: 0 20px;
+        margin-bottom: 20px;
+        img{
+            border-radius: 5px 5px 0 0;
+            width: 380px;
+            height: 380px;
+            margin-bottom: 20px;
+        }
+
+        h3{
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .link-text-container{
+            p{
+                font-size: 18px;
+                text-align: center;
+                
+            }
+            .link-text-shadow{
+                width: 50%;
+                height: 19px;
+                position: relative;
+                top: -19px;
+                left: 50%;
+                background: linear-gradient(0.25turn,$recipe-background-alpha,$recipe-background,$recipe-background);
+            }
+        }
+        
+    }
+    .recipe-item:focus{
+        box-shadow: 0 0 8px green;
+    }
+    .recipe-item:hover{
+        box-shadow: 0 0 8px green;
+    }
+}
+
+.loading-content{
+    text-align: center;
+    padding: 20px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+/************************************************************************************************
+scrollbar
+************************************************************************************************/
+
+
+@-moz-document url-prefix(){
+    html{
+        scrollbar-width: thin;
+        scrollbar-color: black gray;
+    }
+
+}
+
+body::-webkit-scrollbar{
+    width: 10px;
+}
+  
+  
+body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px black; 
+    border-radius: 5px;
+}
+  
+
+body::-webkit-scrollbar-thumb {
+    background: gray; 
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 1020px) {
+    ::-webkit-scrollbar{
+        width: 0;
+    }
+    @-moz-document url-prefix(){
+        html{
+            scrollbar-width: none;
+        }
+    }
+}
+
+
+/****************************************************************************************************
+responsive desing
+****************************************************************************************************/
+
+@media screen and (max-width: 1000px) {
+
+    .search-section{
+        .form-h2{
+    
+            h2{
+                top: -60px;
+            }
+        }
+    }
+
+    #recipes-container{
+        margin: {
+            left: 50px;
+            right: 50px;
+        }
+
+        .recipe-item{
+            width: 38vw;
+            height: 65vw;
+
+            img{
+                width: 38vw;
+                height: 38vw;
+            }
+
+            h3{
+                font-size: 3vw;
+            }
+            .link-text-container{
+                p{
+                    font-size: 1.8vw;
+                }
+            }
+            
+        }
+    }
+}
+
+@media screen and (max-width: 821px) {
+    #recipes-container{
+        margin: {
+            left: 5px;
+            right: 5px;
+        }
+    }
+}
+
+@media screen and (max-width: 700px) {
+    #recipes-container{
+        margin: {
+            left: 9vw;
+            right: 9vw;
+        }
+        .recipe-item{
+            width: 80vw;
+            height: 136.5vw;
+            img{
+                width: 80vw;
+                height: 80vw;
+            }
+            h3{
+                font-size: 6vw;
+            }
+            .link-text-container{
+                p{
+                    font-size: 5vw;
+                    margin: {
+                        left: 10px;
+                        right: 10px;
+                    }
+                }
+                .link-text-shadow{
+                    height: calc(19/18*5vw);
+                    top: calc(-19/18*5vw);
+                }
+            }
+            
+
+        }
+        
+    }
+}

@@ -1,0 +1,87 @@
+$shadow-color: rgba(0,0,0,0.5);
+$main-text-color: rgb(200, 200, 200);
+$main-text-hover-color: whitesmoke;
+$main-background_color: rgb(80, 80, 80);
+$cookies-link-text-color: black;
+
+.cookie-shadow{
+    width: 100vw;
+    height: 100vh;
+    background-color: $shadow-color;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+}
+
+.cookie-container{
+    width: 100vw;
+    height: 25vh;
+    background-color: $main-background_color;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px;
+
+    .cookie-text-container{
+        h2{
+            color:$main-text-color;
+            margin-bottom: 10px;
+        }
+        p{
+            color: $main-text-color;
+            a{
+                color: $cookies-link-text-color;
+                font-weight: bold;
+            }
+            a:hover{
+                border-bottom: 5px solid $cookies-link-text-color;
+            }
+            a:focus{
+                border-bottom: 5px solid $cookies-link-text-color;
+            }
+        }
+    }
+
+    .cookie-button-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        button{
+            background-color: green;
+            color: $main-text-color;
+            width: 100px;
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+
+        }
+        button:hover{
+            background-color: darkgreen;
+            color: $main-text-hover-color;
+        }
+        button:focus{
+            background-color: darkgreen;
+            color: $main-text-hover-color;
+        }
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .cookie-container{
+        flex-direction: column;
+        height: auto;
+        align-items: center;
+        .cookie-text-container{
+            margin-bottom: 60px;
+        }
+        .cookie-button-container{
+            width: 80%;
+            button{
+                margin-bottom: 20px;
+                width: 100%;
+            } 
+        }
+    }
+}
