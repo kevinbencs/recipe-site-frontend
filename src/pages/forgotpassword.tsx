@@ -14,9 +14,9 @@ export default function Forgotpassword() {
         </p>
         <form action="/" method='Post' onSubmit={handleSzbmit}>
           <label className='email-conatiner'>
-            <input type="email" placeholder='Email' required tabIndex={1} />
+            <input type="email" placeholder='Email' required tabIndex={0} />
           </label>
-          <input type="submit" value="Send" className='submit' tabIndex={2} />
+          <input type="submit" value="Send" className='submit' tabIndex={0} />
         </form>
       </div>
     </main>

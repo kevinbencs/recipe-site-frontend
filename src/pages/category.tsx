@@ -31,8 +31,7 @@ export default function Category() {
           body: JSON.stringify({ category: category?.replaceAll('-', ' ')})});
         const data: JSON = await response.json();
         const meals: RecipeTypeHome[] | null = data as unknown as RecipeTypeHome[];
-        console.log(data);
-        if (meals === null) {
+        if (meals.length === 0 || meals === null) {
           navigate('/');
         }
         else {

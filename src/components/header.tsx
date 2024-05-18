@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction, useState, useEffect, useRef, KeyboardEvent } from 'react';
 import SearchImg from '../img/search2.png';
-
 import Headersearch from './headersearch';
 import Menu from './menu';
 
@@ -9,7 +8,7 @@ import Menu from './menu';
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
 
-export default function Header(props: { setNewsletterShown: Dispatcher<boolean>, isNewsletterShown: boolean }) {
+export default function Header(props: { setNewsletterShown: Dispatcher<boolean>, isNewsletterShown: boolean, account: string, setAccount: Dispatcher<string> }) {
 
   const [windowSize, setWindowSize] = useState(
     window.innerWidth
@@ -21,6 +20,8 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
   const [showNewsLetter, setShowNewsLetter] = useState<boolean>(true);
   const [hamburgerMenuClass, setHamburgerMenuClass] = useState<string>("");
   const hamburgerMenuFocus = useRef<HTMLLabelElement>(null);
+  const [dropDownShow, setDropDownShow] = useState<boolean>(false);
+  const navigate = useNavigate();
 
 
   const newsletterShow = () => {
@@ -42,6 +43,8 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
   });
 
 
+
+
   useEffect(() => {
     if (windowSize < 1001) {
       setShowSliderMenu(false);
@@ -50,13 +53,13 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
       setShowSliderMenu(true);
     }
 
-    if (windowSize < 721) {
+    if (windowSize < 721 || props.account !== '') {
       setShowNewsLetter(false);
     }
     else {
       setShowNewsLetter(true);
     }
-  }, [windowSize]);
+  }, [windowSize, props.account]);
 
 
   const handleClickShowSearch = () => {
@@ -87,6 +90,23 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
     }
   }
 
+  const Logout = async () => {
+    await fetch('/logout', {
+      method: "GET",
+      headers: {
+        "Accept": "application/json, text/plain",
+        "Content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      credentials: 'include',
+    });
+    props.setAccount('');
+    navigate('/');
+  };
+
+  const DropDown = () => {
+    setDropDownShow(!dropDownShow);
+  }
 
 
   return (
@@ -98,18 +118,33 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
           </h1>
         </nav>
         <div className='newsletter-search-button'>
+
           {showNewsLetter &&
             <div className='newsletter-on-click' onClick={newsletterShow} tabIndex={0} >Newsletter</div>
           }
-
-
           <button className='search-show-button' onClick={handleClickShowSearch}>
             <img src={SearchImg} alt="search" />
           </button>
-          <nav className='signin-signup'>
-            <Link to='/signin'>Sign in</Link>
-            <Link to='/signup' className='signup'>Sign up</Link>
-          </nav>
+          {props.account === '' &&
+            <nav className='signin-signup'>
+              <Link to='/signin'>Sign in</Link>
+              <Link to='/signup' className='signup'>Sign up</Link>
+            </nav>
+          }
+
+          {props.account !== '' &&
+            <div className='dropdown'>
+              <button className='dropbtn' onClick={DropDown}>{props.account}</button>
+              {dropDownShow &&
+                <section className='dropdown-content'>
+                  <Link to='/newpassword'>New password</Link>
+                  <div onClick={Logout} onKeyDown={Logout} tabIndex={0}>Log out</div>
+                </section>
+              }
+
+            </div>
+          }
+
         </div>
       </div>
 

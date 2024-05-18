@@ -1,7 +1,8 @@
-import { useState, useEffect, KeyboardEvent, SetStateAction, Dispatch, useRef } from 'react';
+import { useState, useEffect, KeyboardEvent, SetStateAction, Dispatch, useRef, SyntheticEvent } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import RecipeDiscription from '../components/recipediscription';
 import Recipeitem from '../components/recipeitem';
+//import CommemtContainer from '../components/commemtcontainer';
 import { RecipeTypeHome, RecipeType, IngredientMeasure,} from '../types/apitype';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -36,8 +37,10 @@ const getIngredientsMeasures = (result: RecipeType, setIngredientsMeasures: Disp
     );
   }
   setIngredientsMeasures(IngredientsMeasures);
-
 };
+
+
+
 
 export default function Recipe() {
   const [recipeItems, setRecipeItems] = useState<RecipeTypeHome[] | null>(null);
@@ -72,7 +75,7 @@ export default function Recipe() {
         } );
         const data: JSON = await response.json();
         const meal: RecipeType[] | null = data as unknown as RecipeType[] | null;
-        if (meal === null) {
+        if (meal?.length === 0 || meal === null) {
           navigate('/');
         }
         else {
@@ -169,6 +172,10 @@ export default function Recipe() {
     }
   };
 
+  const sendComment= (e: SyntheticEvent) => {
+    e.preventDefault();
+  };
+
 
   return (
     <main ref={mainRef}>
@@ -204,6 +211,13 @@ export default function Recipe() {
               <div className='decoration'></div>
             </div>
           </div>
+
+          <form action="" method='post' onSubmit={sendComment}>
+            <input type="text" />
+            <input type="submit" />
+          </form>
+          
+          {/*<CommemtContainer/>*/}
 
           {readMore && <div className='read-more' onClick={handleClick} tabIndex={0} onKeyDown={handleKeyDown}>
             Read more

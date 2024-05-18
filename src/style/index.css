@@ -49,6 +49,10 @@ header .header-newsletter .newsletter-search-button {
   align-items: center;
   justify-content: space-evenly;
   width: 350px;
+  /* Dropdown button on hover & focus */
+  /* The container <div> - needed to position the dropdown content */
+  /* Links inside the dropdown */
+  /* Change color of dropdown links on hover */
 }
 header .header-newsletter .newsletter-search-button .newsletter-on-click {
   cursor: pointer;
@@ -106,6 +110,50 @@ header .header-newsletter .newsletter-search-button .signin-signup .signup:hover
 }
 header .header-newsletter .newsletter-search-button .signin-signup .signup:focus {
   background-color: green;
+}
+header .header-newsletter .newsletter-search-button .dropbtn {
+  color: rgb(200, 200, 200);
+  background-color: rgb(80, 80, 80);
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+header .header-newsletter .newsletter-search-button .dropbtn:hover,
+header .header-newsletter .newsletter-search-button .dropbtn:focus {
+  background-color: green;
+  color: whitesmoke;
+}
+header .header-newsletter .newsletter-search-button .dropdown {
+  position: relative;
+  display: inline-block;
+}
+header .header-newsletter .newsletter-search-button .dropdown-content {
+  position: absolute;
+  background-color: #b8b8b8;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+header .header-newsletter .newsletter-search-button .dropdown-content a {
+  color: rgb(200, 200, 200);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+header .header-newsletter .newsletter-search-button .dropdown-content div {
+  color: rgb(200, 200, 200);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+header .header-newsletter .newsletter-search-button .dropdown-content a:hover {
+  background-color: green;
+  color: whitesmoke;
+}
+header .header-newsletter .newsletter-search-button .dropdown-content div:hover {
+  background-color: green;
+  color: whitesmoke;
 }
 header .form-container {
   position: fixed;
@@ -257,7 +305,9 @@ header .menu-item-container-container .menu-item-container li a:focus {
     text-align: center;
     display: block;
   }
-  header .hamburger-menu-label .hamburger-menu, header .hamburger-menu-label .hamburger-menu::after, header .hamburger-menu-label .hamburger-menu::before {
+  header .hamburger-menu-label .hamburger-menu,
+  header .hamburger-menu-label .hamburger-menu::after,
+  header .hamburger-menu-label .hamburger-menu::before {
     height: 5px;
     background-color: black;
     display: block;
@@ -842,7 +892,7 @@ footer .copyright {
   box-shadow: 0 0 10px black;
   border-radius: 10px;
   width: 500px;
-  height: 600px;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -851,12 +901,41 @@ footer .copyright {
   font-size: 25px;
   margin: 20px 0;
 }
-.sign-container .form-container p {
+.sign-container .form-container .error {
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+.sign-container .form-container .error div {
+  color: red;
+  font-size: 16px;
+}
+.sign-container .form-container .pass-changed {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+.sign-container .form-container .pass-changed div {
+  color: green;
+  font-size: 16px;
 }
 .sign-container .form-container form {
   display: flex;
   flex-direction: column;
+}
+.sign-container .form-container form .name-conatiner input {
+  border: 1px solid black;
+  width: 400px;
+  height: 40px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  padding-left: 10px;
+}
+.sign-container .form-container form .name-conatiner input:focus {
+  box-shadow: 0 0 5px green;
 }
 .sign-container .form-container form .email-conatiner input {
   border: 1px solid black;
@@ -940,7 +1019,13 @@ footer .copyright {
   .sign-container .form-container {
     width: 100vw;
   }
+  .sign-container .form-container .error {
+    width: 90vw;
+  }
   .sign-container .form-container form {
+    width: 90vw;
+  }
+  .sign-container .form-container form .name-conatiner input {
     width: 90vw;
   }
   .sign-container .form-container form .email-conatiner input {
