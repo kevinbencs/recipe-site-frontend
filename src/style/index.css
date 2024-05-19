@@ -124,6 +124,22 @@ header .header-newsletter .newsletter-search-button .dropbtn:focus {
   background-color: green;
   color: whitesmoke;
 }
+header .header-newsletter .newsletter-search-button .dropbtn:has(+ .dropdown-content a:hover) {
+  background-color: green;
+  color: whitesmoke;
+}
+header .header-newsletter .newsletter-search-button .dropbtn:has(+ .dropdown-content a:focus) {
+  background-color: green;
+  color: whitesmoke;
+}
+header .header-newsletter .newsletter-search-button .dropbtn:has(+ .dropdown-content div:hover) {
+  background-color: green;
+  color: whitesmoke;
+}
+header .header-newsletter .newsletter-search-button .dropbtn:has(+ .dropdown-content div:focus) {
+  background-color: green;
+  color: whitesmoke;
+}
 header .header-newsletter .newsletter-search-button .dropdown {
   position: relative;
   display: inline-block;
@@ -566,7 +582,8 @@ footer .copyright {
   width: 50px;
   height: 50px;
 }
-.newsletter .newsletter-header label span, .newsletter .newsletter-header label span::after {
+.newsletter .newsletter-header label span,
+.newsletter .newsletter-header label span::after {
   width: 38px;
   display: inline-block;
   height: 5px;
@@ -583,10 +600,12 @@ footer .copyright {
   content: "";
   top: -11.25px;
 }
-.newsletter .newsletter-header label:hover span, .newsletter .newsletter-header label:hover span::after {
+.newsletter .newsletter-header label:hover span,
+.newsletter .newsletter-header label:hover span::after {
   background-color: whitesmoke;
 }
-.newsletter .newsletter-header label:focus span, .newsletter .newsletter-header label:focus span::after {
+.newsletter .newsletter-header label:focus span,
+.newsletter .newsletter-header label:focus span::after {
   background-color: whitesmoke;
 }
 .newsletter .main-header {
@@ -597,6 +616,26 @@ footer .copyright {
 .newsletter p {
   margin: 0 10px 0 10px;
   font-size: 18px;
+}
+.newsletter .error {
+  margin: 0 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+.newsletter .error div {
+  color: red;
+  font-size: 16px;
+}
+.newsletter .submit-ok {
+  margin: 0 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+.newsletter .submit-ok div {
+  color: green;
+  font-size: 16px;
 }
 .newsletter form {
   display: flex;
@@ -926,13 +965,13 @@ footer .copyright {
   color: red;
   font-size: 16px;
 }
-.sign-container .form-container .sumbit-ok {
+.sign-container .form-container .submit-ok {
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   width: 400px;
 }
-.sign-container .form-container .sumbit-ok div {
+.sign-container .form-container .submit-ok div {
   color: green;
   font-size: 16px;
 }

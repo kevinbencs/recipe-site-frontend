@@ -1,10 +1,10 @@
 $main-text-color: rgb(200, 200, 200);
 $main-text-hover-color: whitesmoke;
-$shadow-color: rgba(0,0,0,0.5);
+$shadow-color: rgba(0, 0, 0, 0.5);
 $checkbox-background_color: rgb(80, 80, 80);
 
 
-.newsletter-shadow{
+.newsletter-shadow {
     width: 100vw;
     height: 100vh;
     background-color: $shadow-color;
@@ -15,7 +15,7 @@ $checkbox-background_color: rgb(80, 80, 80);
 }
 
 
-.newsletter{
+.newsletter {
     z-index: 10;
     position: fixed;
     left: calc(50vw - 200px);
@@ -24,19 +24,22 @@ $checkbox-background_color: rgb(80, 80, 80);
     height: 800px;
     background-color: whitesmoke;
 
-    .newsletter-header{
+    .newsletter-header {
         display: flex;
         justify-content: space-between;
         background-color: green;
-        h2{
+
+        h2 {
             color: $main-text-color;
             margin: 5px 0 5px 10px;
         }
-        label{
+
+        label {
             width: 50px;
             height: 50px;
-            
-            span, span::after{
+
+            span,
+            span::after {
                 width: 38px;
                 display: inline-block;
                 height: 5px;
@@ -44,47 +47,79 @@ $checkbox-background_color: rgb(80, 80, 80);
                 position: relative;
                 rotate: 45deg;
             }
-            span{
+
+            span {
                 top: calc((50px - 5px)/2);
                 left: calc((50px - 38px)/2);
             }
-            span::after{
+
+            span::after {
                 rotate: 90deg;
                 content: "";
                 top: calc((5px - 50px)/4);
             }
         }
-        label:hover{
-            span, span::after{
+
+        label:hover {
+
+            span,
+            span::after {
                 background-color: $main-text-hover-color;
             }
         }
 
-        label:focus{
-            span, span::after{
+        label:focus {
+
+            span,
+            span::after {
                 background-color: $main-text-hover-color;
             }
         }
-        
-        
+
+
     }
 
-    .main-header{
+    .main-header {
         text-align: center;
         margin: 20px 0 5px 0;
         font-size: 20px;
     }
-    p{
+
+    p {
         margin: 0 10px 0 10px;
         font-size: 18px;
     }
 
-    form{
+    .error {
+        margin: 0 10px 10px 10px;
+        display: flex;
+        flex-direction: column;
+        width: 400px;
+
+        div {
+            color: red;
+            font-size: 16px;
+        }
+    }
+
+    .submit-ok {
+        margin: 0 10px 10px 10px;
+        display: flex;
+        flex-direction: column;
+        width: 400px;
+
+        div {
+            color: green;
+            font-size: 16px;
+        }
+    }
+
+    form {
         display: flex;
         flex-direction: column;
         margin: 10px;
 
-        label{
+        label {
             margin-bottom: 5px;
             margin-top: 10px;
         }
@@ -94,45 +129,50 @@ $checkbox-background_color: rgb(80, 80, 80);
             font-size: 15px;
             padding: 5px;
         }
+
         [name="email"] {
             border: 1px solid black;
             font-size: 15px;
             padding: 5px;
         }
 
-        .checkbox-container{
+        .checkbox-container {
             margin-top: 40px;
             background-color: $checkbox-background_color;
             padding: 20px;
             margin-bottom: 30px;
 
-            h3{
+            h3 {
                 color: $main-text-color;
                 text-align: center;
                 margin-bottom: 40px;
             }
 
-            .checkbox-list{
+            .checkbox-list {
                 display: flex;
                 flex-direction: column;
                 align-items: start;
 
-                div{
+                div {
                     margin-bottom: 20px;
-                    label{
+
+                    label {
                         margin-left: 10px;
                         color: $main-text-color;
+
                         font: {
                             size: 18px;
                             weight: 900;
                         }
                     }
-                    input:focus ~ label{
+
+                    input:focus~label {
                         color: $main-text-hover-color;
                     }
                 }
-                div:hover{
-                    label{
+
+                div:hover {
+                    label {
                         color: $main-text-hover-color;
                     }
                 }
@@ -140,25 +180,27 @@ $checkbox-background_color: rgb(80, 80, 80);
             }
         }
 
-        .submit-button{
+        .submit-button {
             background-color: green;
             color: $main-text-color;
+
             padding: {
                 top: 10px;
                 bottom: 10px;
             }
+
             font: {
                 size: 20px;
                 weight: bold;
             }
         }
 
-        .submit-button:hover{
+        .submit-button:hover {
             color: $main-text-hover-color;
             background-color: darkgreen;
         }
 
-        .submit-button:focus{
+        .submit-button:focus {
             color: $main-text-hover-color;
             background-color: darkgreen;
         }
@@ -167,12 +209,12 @@ $checkbox-background_color: rgb(80, 80, 80);
 
 
 @media screen and (max-width: 800px) {
-    .newsletter-shadow{
+    .newsletter-shadow {
         width: 100%;
         height: auto;
     }
 
-    .newsletter{
+    .newsletter {
         width: 100%;
         min-height: 100vh;
         height: auto;
@@ -180,6 +222,6 @@ $checkbox-background_color: rgb(80, 80, 80);
         left: 0;
         bottom: 0;
         right: 0;
-        overflow-y:scroll;
+        overflow-y: scroll;
     }
 }

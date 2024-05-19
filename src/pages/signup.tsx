@@ -63,16 +63,18 @@ export default function Signup() {
           setSignUpValue({ name: '', email: '', password: '', password2: '', newsletter: false, term: false });
           setErr([]);
           setErrHasAccount('');
-          setSubmitOk('res.message');
+          setSubmitOk(res.message);
           
         }
         else if (res.status === 'failed') {
           setErrHasAccount(res.message);
           setErr([]);
+          setSubmitOk('');
         }
         else if (res.status !== 'error') {
           setErr(res.errors.errors);
           setErrHasAccount('');
+          setSubmitOk('');
         }
       }
       )
@@ -96,8 +98,8 @@ export default function Signup() {
         }
 
         {submitOk !== '' &&
-          <div className='.sumbit-ok'>
-            <div>Password changed</div>
+          <div className='submit-ok'>
+            <div>{submitOk}</div>
           </div>
         }
 

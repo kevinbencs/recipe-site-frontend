@@ -16,7 +16,7 @@ export default function Newpassword() {
   const [inputValue, setInputValue] = useState<FormValue>({ password: '', password2: '' });
   const [err, setErr] = useState<msg[]>([]);
   const [errHasAccount, setErrHasAccount] = useState<string>('');
-  const [passwordCahnged, setPasswordChanged] = useState<boolean>(false);
+  const [passwordCahnged, setPasswordChanged] = useState<string>('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,15 +50,17 @@ export default function Newpassword() {
           setErr([]);
           setErrHasAccount('');
           setInputValue({ password: '', password2: '' });
-          setPasswordChanged(true);
+          setPasswordChanged(res.message);
         }
         else if (res.status === 'failed') {
           setErrHasAccount(res.message);
           setErr([]);
+          setPasswordChanged('');
         }
         else if (res.status !== 'error') {
           setErr(res.errors.errors);
           setErrHasAccount('');
+          setPasswordChanged('');
         }
       });
   };
@@ -77,8 +79,8 @@ export default function Newpassword() {
           </div>
         }
 
-        {passwordCahnged &&
-          <div className='.sumbit-ok'>
+        {passwordCahnged !== '' &&
+          <div className='submit-ok'>
             <div>Password changed</div>
           </div>
         }
