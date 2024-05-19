@@ -78,7 +78,7 @@ export default function Newpassword() {
         }
 
         {passwordCahnged &&
-          <div className='.pass-changed'>
+          <div className='.sumbit-ok'>
             <div>Password changed</div>
           </div>
         }

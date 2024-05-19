@@ -926,13 +926,13 @@ footer .copyright {
   color: red;
   font-size: 16px;
 }
-.sign-container .form-container .pass-changed {
+.sign-container .form-container .sumbit-ok {
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   width: 400px;
 }
-.sign-container .form-container .pass-changed div {
+.sign-container .form-container .sumbit-ok div {
   color: green;
   font-size: 16px;
 }
