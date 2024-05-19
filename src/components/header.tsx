@@ -42,9 +42,6 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
     }
   });
 
-
-
-
   useEffect(() => {
     if (windowSize < 1001) {
       setShowSliderMenu(false);
@@ -61,6 +58,13 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
     }
   }, [windowSize, props.account]);
 
+
+  const keyDownDropMenu = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.code === 'Enter'){
+      setDropDownShow(!dropDownShow);
+    }
+  };
+ 
 
   const handleClickShowSearch = () => {
     setFormShow(true);
@@ -91,6 +95,7 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
   }
 
   const Logout = async () => {
+    setDropDownShow(false);
     await fetch('/logout', {
       method: "GET",
       headers: {
@@ -104,9 +109,13 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
     navigate('/');
   };
 
-  const DropDown = () => {
-    setDropDownShow(!dropDownShow);
+  const keyDownLogout = (e: KeyboardEvent<MathMLElement>) => {
+    if(e.code === 'Enter'){
+      Logout();
+    }
   }
+
+
 
 
   return (
@@ -122,7 +131,7 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
           {showNewsLetter &&
             <div className='newsletter-on-click' onClick={newsletterShow} tabIndex={0} >Newsletter</div>
           }
-          <button className='search-show-button' onClick={handleClickShowSearch}>
+          <button className='search-show-button' onClick={handleClickShowSearch} onFocus={() => setDropDownShow(false)}>
             <img src={SearchImg} alt="search" />
           </button>
           {props.account === '' &&
@@ -133,12 +142,12 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
           }
 
           {props.account !== '' &&
-            <div className='dropdown'>
-              <button className='dropbtn' onClick={DropDown}>{props.account}</button>
+            <div className='dropdown' onMouseEnter={() => setDropDownShow(true)} onMouseLeave={() => setDropDownShow(false)}>
+              <button className='dropbtn' onKeyDown={keyDownDropMenu} >{props.account}</button>
               {dropDownShow &&
-                <section className='dropdown-content'>
-                  <Link to='/newpassword'>New password</Link>
-                  <div onClick={Logout} onKeyDown={Logout} tabIndex={0}>Log out</div>
+                <section className='dropdown-content' >
+                  <Link to='/newpassword' onClick={() => setDropDownShow(false)}>New password</Link>
+                  <div onClick={Logout} onKeyDown={keyDownLogout} tabIndex={0} >Log out</div>
                 </section>
               }
 
@@ -151,12 +160,12 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
       <Headersearch formShow={formShow} setFormShow={setFormShow} />
 
       {!showSliderMenu &&
-        <label className='hamburger-menu-label' onClick={clickHamburgerMenu} tabIndex={0} onKeyDown={keyDownkHamburgerMenu} ref={hamburgerMenuFocus}>
+        <label className='hamburger-menu-label' onClick={clickHamburgerMenu} tabIndex={0} onKeyDown={keyDownkHamburgerMenu} ref={hamburgerMenuFocus} onFocus={(() => setDropDownShow(false))}>
           <span className={`hamburger-menu ${hamburgerMenuClass}`}></span>
         </label>
       }
 
-      <Menu isMenuActive={isMenuActive} showSliderMenu={showSliderMenu} setMenuActive={setMenuActive} setHamburgerMenuClass={setHamburgerMenuClass} />
+      <Menu isMenuActive={isMenuActive} showSliderMenu={showSliderMenu} setMenuActive={setMenuActive} setHamburgerMenuClass={setHamburgerMenuClass} setDropDownShow={setDropDownShow}/>
 
 
     </header>

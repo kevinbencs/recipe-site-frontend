@@ -51,7 +51,7 @@ const slidemenu = [
   { menu: 'Starter', id: 2 }
 ];
 
-export default function Menu(props: { isMenuActive: boolean, showSliderMenu: boolean, setMenuActive: Dispatcher<boolean>, setHamburgerMenuClass: Dispatcher<string> }) {
+export default function Menu(props: { isMenuActive: boolean, showSliderMenu: boolean, setMenuActive: Dispatcher<boolean>, setHamburgerMenuClass: Dispatcher<string>, setDropDownShow: Dispatcher<boolean> }) {
 
 
   return (
@@ -59,7 +59,7 @@ export default function Menu(props: { isMenuActive: boolean, showSliderMenu: boo
       {props.showSliderMenu &&
         <nav className='menu-item-container-container'>
           <ul className='menu-item-container'>
-            {slidemenu.map(menuItem => <Slidemenu menuItem={menuItem.menu} key={uuidv4()} />)}
+            {slidemenu.map(menuItem => <Slidemenu menuItem={menuItem.menu} key={uuidv4()} setDropDownShow={props.setDropDownShow}/>)}
           </ul>
         </nav>
       }
