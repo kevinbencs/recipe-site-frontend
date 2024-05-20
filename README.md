@@ -2,8 +2,11 @@
 
 ## Github pages: https://kevinbencs.github.io/recipe-site/
 
-Itt látható egy általam létrehozott recept weboldal kódja.
+Itt látható egy általam létrehozott recept weboldal frontend kódja.
 
 Használt technológiák: `React, TypeScript, Sass, HTML, CSS`.
 
-Az oldahoz az alábbi API-t használtam: `https://www.themealdb.com/api.php`
+Az oldal backend kódja: 
+
+Backend nélküli recept weboldal: https://github.com/kevinbencs/recipe-site
+## Github pages: https://kevinbencs.github.io/recipe-site/
