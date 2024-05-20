@@ -78,7 +78,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
             id={comment.id}
             setDeleteComment={setDeleteComment}
             key={uuidv4()} />)}
-        {oldComments.length === 0 && <div>kell</div>}
+        {oldComments.length === 0 && <div className='no-comment'>No comment</div>}
 
       </div>
     </div>

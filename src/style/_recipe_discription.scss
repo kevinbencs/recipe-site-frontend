@@ -169,6 +169,11 @@ $comment-color: rgb(139, 139, 139);
                 flex-direction: column;
                 align-items: center;
 
+                .no-comment{
+                    font-size: 23px;
+                    color: rgb(151, 149, 149);
+                }
+
                 .comment-conatiner{
                     margin-bottom: 40px;
                     width: 60%;

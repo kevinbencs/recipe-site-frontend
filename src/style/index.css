@@ -929,6 +929,10 @@ footer .copyright {
   flex-direction: column;
   align-items: center;
 }
+.recipe-discription .recipe-main .comment-section .comment-container-container .no-comment {
+  font-size: 23px;
+  color: rgb(151, 149, 149);
+}
 .recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner {
   margin-bottom: 40px;
   width: 60%;
