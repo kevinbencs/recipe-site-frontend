@@ -1,6 +1,8 @@
-.recipe-discription{
+$comment-color: rgb(139, 139, 139);
 
-    .recipe-header{
+.recipe-discription {
+
+    .recipe-header {
         height: 600px;
         background-size: cover;
         background-repeat: no-repeat;
@@ -8,58 +10,72 @@
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        h2{
-            
+
+        h2 {
+
             background-color: green;
             margin-bottom: 40px;
             font-size: max(3vw, 30px);
         }
+
         margin-bottom: 60px;
     }
-    .recipe-main{
+
+    .recipe-main {
         display: grid;
-        grid-template-areas: 
-        "a b"
-        "c c";
+        grid-template-areas:
+            "a b"
+            "d d"
+            "c c";
+
         margin: {
             left: calc((100% - 500px - 100px - 255px)/2);
             right: calc((100% - 500px - 100px - 255px)/2);
-        };
-        .recipe-video-text{
+        }
+
+        ;
+
+        .recipe-video-text {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 500px;
             grid-area: a;
             margin-right: 100px;
-            iframe{
+
+            iframe {
                 width: 500px;
                 height: calc(315/560*500px);
                 margin-bottom: 40px;
             }
-            p{
+
+            p {
                 white-space: pre-line;
             }
         }
-        .recipe-ingredients-container{
+
+        .recipe-ingredients-container {
             width: 255px;
             grid-area: b;
-            .recipe-ingredients{
-                
+
+            .recipe-ingredients {
+
                 position: sticky;
                 top: 200px;
-                ul{
+
+                ul {
                     display: grid;
                     grid-template-columns: auto;
-                    .ingredient{
+
+                    .ingredient {
                         margin-bottom: 10px;
                         margin-top: 10px;
                         text-align: center;
                     }
                 }
-                
 
-                .decoration{
+
+                .decoration {
                     clip-path: ellipse(50% 70% at 50% 80%);
                     width: 255px;
                     height: 10px;
@@ -67,8 +83,9 @@
                 }
             }
         }
-        .read-more{
-            font-size: max(2vw,22px);
+
+        .read-more {
+            font-size: max(2vw, 22px);
             text-align: center;
             box-shadow: 0 0 10px black;
             margin-bottom: 20px;
@@ -77,25 +94,150 @@
             border-radius: 10px;
         }
 
-        .read-more:focus{
+        .read-more:focus {
             box-shadow: 0 0 20px black;
         }
 
-        .hide-text{
+        .hide-text {
             max-height: 200px;
             overflow: hidden;
         }
-        .hide-ingredients{
+
+        .hide-ingredients {
             max-height: 200px;
             overflow: hidden;
         }
-        
+
+        .hide-comments{
+            display: none;
+            height: 0;
+        }
+
+        .comment-section {
+            margin-top: 40px;
+            grid-area: d;
+
+            h3 {
+                font-size: 18px;
+            }
+
+            .comment-form {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+
+                p {
+                    width: 60%;
+                    max-width: 600px;
+                    min-height: 100px;
+                    font-size: 14px;
+                    border: 1px solid gray;
+                    border-radius: 8px;
+                    margin: 20px 0;
+                    padding: 10px;
+                    overflow-wrap: break-word;
+                }
+
+                input {
+                    width: 60%;
+                    max-width: 600px;
+                    padding: 5px;
+                    font-size: 16px;
+                    border: 1px solid green;
+                    border-radius: 5px;
+                    background-color: white;
+                }
+
+                input:hover {
+                    background-color: green;
+                    color: whitesmoke
+                }
+
+                input:focus {
+                    background-color: green;
+                    color: whitesmoke
+                }
+
+                p:focus {
+                    border: 1px solid black;
+                }
+            }
+
+            .comment-container-container{
+                margin-top: 100px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .comment-conatiner{
+                    margin-bottom: 40px;
+                    width: 60%;
+                    max-width: 600px;
+                    padding: 18px;
+                    background-color: $comment-color;
+                    border-radius: 15px;
+
+                    .author-of-comment{
+                        font-size: 14px;
+                        margin-bottom: 8px;
+                        color: whitesmoke;
+                    }
+
+                    .comment{
+                        font-size: 16px;
+                        margin-bottom: 8px;
+                        color: whitesmoke;
+                    }
+
+                    .button-conatiner{
+                        display: flex;
+                        justify-content: space-between;
+                    }
+
+                    .edit{
+                        font-size: 14px;
+                        background-color: $comment-color;
+                        color: whitesmoke;
+                        cursor: pointer;
+                    }
+
+                    .edit:focus{
+                        border-bottom: 1px solid whitesmoke;
+                    }
+
+                    form{
+                        display: flex;
+                        flex-direction: column;
+                        p{
+                            max-width: calc(600px - 18px*2);
+                            color: rgb(201, 201, 201);
+                            padding: 10px;
+                            margin-bottom: 8px;
+                        }
+                        input{
+                            background-color: $comment-color;
+                            color: whitesmoke;
+                            align-self: flex-end;
+                            cursor: pointer;
+                        }
+                        p:focus{
+                            color: whitesmoke;
+                        }
+                        input:focus{
+                            border-bottom: 1px solid whitesmoke;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
 
-.another-recipes{
+.another-recipes {
     margin: 80px 0;
-    h2{
+
+    h2 {
         text-align: center;
         margin-bottom: 20px;
         font-size: max(2.5vw, 25px);
@@ -104,75 +246,143 @@
 
 
 @media screen and (max-width: 1000px) {
-    .recipe-discription{
-        .recipe-header{
+    .recipe-discription {
+        .recipe-header {
             height: 400px;
         }
-        .recipe-main{
-            grid-template-areas: 
-            "a"
-            "b"
-            "c";
+
+        .recipe-main {
+            grid-template-areas:
+                "a"
+                "b"
+                "d"
+                "c";
 
             margin: {
                 left: calc((100% - 500px)/2);
                 right: calc((100% - 500px)/2);
-            };
+            }
 
-            .recipe-video-text{
+            ;
+
+            .recipe-video-text {
                 margin-right: 0;
             }
 
-            .recipe-ingredients-container{
+            .recipe-ingredients-container {
                 margin-top: 60px;
                 width: 500px;
-                .recipe-ingredients{
+
+                .recipe-ingredients {
                     position: static;
 
-                    .decoration{
+                    .decoration {
                         width: 500px;
                     }
-                    
+
                 }
             }
 
-            .hide-text{
+            .hide-text {
                 max-height: 400px;
             }
-            .hide-ingredients{
+
+            .hide-ingredients {
                 height: 0;
+            }
+
+            .comment-section {
+                .comment-form {
+                    p {
+                        width: 100%;
+                        max-width: 450px;
+                    }
+
+                    input {
+                        width: 100%;
+                        max-width: 450px;
+                    }
+                }
+            }
+
+            .comment-container-container{
+
+                .comment-conatiner{
+                    width: 100%;
+                    max-width: 450px;
+
+                    form{
+                        p{
+                            max-width: calc(450px - 18px*2);
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-@media screen and (max-width: 520px){
-    .recipe-discription{
-        .recipe-header{
+@media screen and (max-width: 520px) {
+    .recipe-discription {
+        .recipe-header {
             height: 300px;
         }
-        .recipe-main{
+
+        .recipe-main {
             margin: {
                 left: 10px;
                 right: 10px;
 
-            };
-            .recipe-video-text{
+            }
+
+            .recipe-video-text {
                 width: 100%;
 
-                iframe{
+                iframe {
                     width: 100%;
                     height: calc(315/560*(100vw - 20px));
                 }
             }
-            .recipe-ingredients-container{
+
+            .recipe-ingredients-container {
                 width: 100%;
-                .recipe-ingredients{
-                    .decoration{
+
+                .recipe-ingredients {
+                    .decoration {
                         width: 100%;
                     }
                 }
             }
         }
+    }
+}
+
+@media screen and (max-width: 490px) {
+    .recipe-discription {
+        .recipe-main {
+            .comment-section {
+                .comment-form {
+                    p {
+                        max-width: 300px;
+                    }
+
+                    input {
+                        max-width: 300px;
+                    }
+                }
+
+                .comment-conatiner{
+                    width: 100%;
+                    max-width: 450px;
+
+                    form{
+                        p{
+                            max-width: calc(300px - 18px*2);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

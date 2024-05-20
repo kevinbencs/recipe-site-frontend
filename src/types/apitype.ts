@@ -12,7 +12,7 @@ export interface RecipeTypeHome {
 export interface RecipeType {
     strMeal: string,
     strMealThumb: string,
-    idMeal: string,
+    id: string,
     strCategory: string,
     strInstructions: string,
     strYoutube: string,

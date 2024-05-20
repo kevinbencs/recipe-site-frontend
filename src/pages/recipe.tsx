@@ -1,8 +1,8 @@
-import { useState, useEffect, KeyboardEvent, SetStateAction, Dispatch, useRef, SyntheticEvent } from 'react';
+import { useState, useEffect, KeyboardEvent, SetStateAction, Dispatch, useRef} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import RecipeDiscription from '../components/recipediscription';
 import Recipeitem from '../components/recipeitem';
-//import CommemtContainer from '../components/commemtcontainer';
+import CommemtContainer from '../components/commemtcontainer';
 import { RecipeTypeHome, RecipeType, IngredientMeasure,} from '../types/apitype';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -42,7 +42,7 @@ const getIngredientsMeasures = (result: RecipeType, setIngredientsMeasures: Disp
 
 
 
-export default function Recipe() {
+export default function Recipe(props: {account: string}) {
   const [recipeItems, setRecipeItems] = useState<RecipeTypeHome[] | null>(null);
   const [canCallApi, setCanCallApi] = useState<boolean>(true);
   const [mealsNumber, setMealsNumber] = useState<number>(0);
@@ -53,6 +53,8 @@ export default function Recipe() {
   const [ingredientsMeasures, setIngredientsMeasures] = useState<IngredientMeasure[]>([]);
   const [hideRecipeText, setHideRecipeText] = useState<string>('hide-text');
   const [hideRecipeIngredients, setHideRecipeIngredients] = useState<string>('hide-ingredients');
+  const [hideComments, setHideComments] = useState<string>('hide-comments');
+  const [recipeId, setRecipeId] = useState<number>(0);
   const [readMore, setReadMore] = useState<boolean>(true);
   const mainRef = useRef<HTMLUListElement | null>(null);
 
@@ -82,6 +84,7 @@ export default function Recipe() {
           setRecipeDiscription(meal[0]);
           setYoutubeVideo(meal[0]?.strYoutube.replace('watch?v=', 'embed/'));
           getIngredientsMeasures(meal[0], setIngredientsMeasures);
+          setRecipeId(Number(meal[0].id));
         }
       }
       catch (e) {
@@ -120,6 +123,7 @@ export default function Recipe() {
     setReadMore(true);
     setHideRecipeIngredients('hide-ingredients');
     setHideRecipeText('hide-text');
+    setHideComments('hide-comments');
     callRecipeDiscriptionApi();
     callRecipesApi()
   }, [name, category]);
@@ -128,8 +132,8 @@ export default function Recipe() {
   //More recipe loading when page scroll
   useEffect(() => {
     const trackScrolling = async () => {
-      if (canCallApi) {
-        if (mainRef.current!.getBoundingClientRect().bottom < window.innerHeight && loadMealsNumber < mealsNumber && mealsNumber > 6 && mealsId) {
+      if (canCallApi && mainRef.current !== null) {
+        if (mainRef.current.getBoundingClientRect().bottom < window.innerHeight && loadMealsNumber < mealsNumber && mealsNumber > 6 && mealsId) {
           setCanCallApi(false);
           let mealById: RecipeTypeHome[] = [];
 
@@ -164,6 +168,7 @@ export default function Recipe() {
     setHideRecipeText('');
     setReadMore(false);
     setHideRecipeIngredients('');
+    setHideComments('');
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -172,9 +177,7 @@ export default function Recipe() {
     }
   };
 
-  const sendComment= (e: SyntheticEvent) => {
-    e.preventDefault();
-  };
+  
 
 
   return (
@@ -212,12 +215,7 @@ export default function Recipe() {
             </div>
           </div>
 
-          <form action="" method='post' onSubmit={sendComment}>
-            <input type="text" />
-            <input type="submit" />
-          </form>
-          
-          {/*<CommemtContainer/>*/}
+          <CommemtContainer recipeId={recipeId} hideComments={hideComments} account={props.account}/>
 
           {readMore && <div className='read-more' onClick={handleClick} tabIndex={0} onKeyDown={handleKeyDown}>
             Read more

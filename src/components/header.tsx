@@ -50,7 +50,7 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
       setShowSliderMenu(true);
     }
 
-    if (windowSize < 721 || props.account !== '') {
+    if (windowSize < 721 || props.account !== "undefined") {
       setShowNewsLetter(false);
     }
     else {
@@ -105,7 +105,7 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
       },
       credentials: 'include',
     });
-    props.setAccount('');
+    props.setAccount('undefined');
     navigate('/');
   };
 
@@ -134,14 +134,14 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
           <button className='search-show-button' onClick={handleClickShowSearch} onFocus={() => setDropDownShow(false)}>
             <img src={SearchImg} alt="search" />
           </button>
-          {props.account === '' &&
+          {props.account === 'undefined' &&
             <nav className='signin-signup'>
               <Link to='/signin'>Sign in</Link>
               <Link to='/signup' className='signup'>Sign up</Link>
             </nav>
           }
 
-          {props.account !== '' &&
+          {props.account !== 'undefined' &&
             <div className='dropdown' onMouseEnter={() => setDropDownShow(true)} onMouseLeave={() => setDropDownShow(false)}>
               <button className='dropbtn' onKeyDown={keyDownDropMenu} >{props.account}</button>
               {dropDownShow &&

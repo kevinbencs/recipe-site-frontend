@@ -813,7 +813,7 @@ footer .copyright {
 }
 .recipe-discription .recipe-main {
   display: grid;
-  grid-template-areas: "a b" "c c";
+  grid-template-areas: "a b" "d d" "c c";
   margin-left: calc((100% - 500px - 100px - 255px) / 2);
   margin-right: calc((100% - 500px - 100px - 255px) / 2);
 }
@@ -876,6 +876,112 @@ footer .copyright {
   max-height: 200px;
   overflow: hidden;
 }
+.recipe-discription .recipe-main .hide-comments {
+  display: none;
+  height: 0;
+}
+.recipe-discription .recipe-main .comment-section {
+  margin-top: 40px;
+  grid-area: d;
+}
+.recipe-discription .recipe-main .comment-section h3 {
+  font-size: 18px;
+}
+.recipe-discription .recipe-main .comment-section .comment-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.recipe-discription .recipe-main .comment-section .comment-form p {
+  width: 60%;
+  max-width: 600px;
+  min-height: 100px;
+  font-size: 14px;
+  border: 1px solid gray;
+  border-radius: 8px;
+  margin: 20px 0;
+  padding: 10px;
+  overflow-wrap: break-word;
+}
+.recipe-discription .recipe-main .comment-section .comment-form input {
+  width: 60%;
+  max-width: 600px;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid green;
+  border-radius: 5px;
+  background-color: white;
+}
+.recipe-discription .recipe-main .comment-section .comment-form input:hover {
+  background-color: green;
+  color: whitesmoke;
+}
+.recipe-discription .recipe-main .comment-section .comment-form input:focus {
+  background-color: green;
+  color: whitesmoke;
+}
+.recipe-discription .recipe-main .comment-section .comment-form p:focus {
+  border: 1px solid black;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner {
+  margin-bottom: 40px;
+  width: 60%;
+  max-width: 600px;
+  padding: 18px;
+  background-color: rgb(139, 139, 139);
+  border-radius: 15px;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner .author-of-comment {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: whitesmoke;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner .comment {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: whitesmoke;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner .button-conatiner {
+  display: flex;
+  justify-content: space-between;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner .edit {
+  font-size: 14px;
+  background-color: rgb(139, 139, 139);
+  color: whitesmoke;
+  cursor: pointer;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner .edit:focus {
+  border-bottom: 1px solid whitesmoke;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner form {
+  display: flex;
+  flex-direction: column;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner form p {
+  max-width: 564px;
+  color: rgb(201, 201, 201);
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner form input {
+  background-color: rgb(139, 139, 139);
+  color: whitesmoke;
+  align-self: flex-end;
+  cursor: pointer;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner form p:focus {
+  color: whitesmoke;
+}
+.recipe-discription .recipe-main .comment-section .comment-container-container .comment-conatiner form input:focus {
+  border-bottom: 1px solid whitesmoke;
+}
 
 .another-recipes {
   margin: 80px 0;
@@ -891,7 +997,7 @@ footer .copyright {
     height: 400px;
   }
   .recipe-discription .recipe-main {
-    grid-template-areas: "a" "b" "c";
+    grid-template-areas: "a" "b" "d" "c";
     margin-left: calc((100% - 500px) / 2);
     margin-right: calc((100% - 500px) / 2);
   }
@@ -914,6 +1020,21 @@ footer .copyright {
   .recipe-discription .recipe-main .hide-ingredients {
     height: 0;
   }
+  .recipe-discription .recipe-main .comment-section .comment-form p {
+    width: 100%;
+    max-width: 450px;
+  }
+  .recipe-discription .recipe-main .comment-section .comment-form input {
+    width: 100%;
+    max-width: 450px;
+  }
+  .recipe-discription .recipe-main .comment-container-container .comment-conatiner {
+    width: 100%;
+    max-width: 450px;
+  }
+  .recipe-discription .recipe-main .comment-container-container .comment-conatiner form p {
+    max-width: 414px;
+  }
 }
 @media screen and (max-width: 520px) {
   .recipe-discription .recipe-header {
@@ -935,6 +1056,21 @@ footer .copyright {
   }
   .recipe-discription .recipe-main .recipe-ingredients-container .recipe-ingredients .decoration {
     width: 100%;
+  }
+}
+@media screen and (max-width: 490px) {
+  .recipe-discription .recipe-main .comment-section .comment-form p {
+    max-width: 300px;
+  }
+  .recipe-discription .recipe-main .comment-section .comment-form input {
+    max-width: 300px;
+  }
+  .recipe-discription .recipe-main .comment-section .comment-conatiner {
+    width: 100%;
+    max-width: 450px;
+  }
+  .recipe-discription .recipe-main .comment-section .comment-conatiner form p {
+    max-width: 264px;
   }
 }
 .sign-container {
