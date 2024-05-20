@@ -6,7 +6,7 @@ interface Newsletter{
   name: string,
   email: string,
   meat: boolean,
-  vegetable: boolean,
+  vegetarian: boolean,
   pasta: boolean,
   side: boolean,
   dessert: boolean,
@@ -21,7 +21,7 @@ interface msg {
 export default function Newsletter(props: { setNewsletterShown: Dispatcher<boolean> }) {
 
   const [inputValue, setInputValue] = useState<Newsletter>({
-    name: '', email: '', meat: false, vegetable: false, pasta: false, side: false, dessert: false, seafood: false
+    name: '', email: '', meat: false, vegetarian: false, pasta: false, side: false, dessert: false, seafood: false
   });
   const [err, setErr] = useState<msg[]>([]);
   const [errHasAccount, setErrHasAccount] = useState<string>('');
@@ -55,7 +55,7 @@ export default function Newsletter(props: { setNewsletterShown: Dispatcher<boole
         setErrHasAccount('');
         setSubmitOk(res.message);
         setInputValue({
-          name: '', email: '', meat: false, vegetable: false, pasta: false, side: false, dessert: false, seafood: false
+          name: '', email: '', meat: false, vegetarian: false, pasta: false, side: false, dessert: false, seafood: false
         });
         
       }
@@ -124,8 +124,8 @@ export default function Newsletter(props: { setNewsletterShown: Dispatcher<boole
                 <label htmlFor="meat">Meat</label>
               </div>
               <div>
-                <input type="checkbox" name="vegetable" onChange={handleInputChange} checked={inputValue.vegetable}/>
-                <label htmlFor="vegetable">Vegetable</label>
+                <input type="checkbox" name="vegetarian" onChange={handleInputChange} checked={inputValue.vegetarian}/>
+                <label htmlFor="vegetarian">Vegetarian</label>
               </div>
               <div>
                 <input type="checkbox" name="dessert" onChange={handleInputChange} checked={inputValue.dessert}/>
