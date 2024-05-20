@@ -10,7 +10,6 @@ import Newpassword from './pages/newpassword';
 import Forgotpassword from './pages/forgotpassword';
 import ScrollTop from './components/scrolltop';
 import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 
 function App() {
   const [account, setAccount] = useState<string>('undefined');
@@ -29,7 +28,6 @@ function App() {
         setAccount(res.name);
       })
     }
-    //setAccount(String(Cookies.get('name')));
     getAccount();
   },[])
 
