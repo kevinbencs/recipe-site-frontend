@@ -1,7 +1,5 @@
 # Recept weboldal
 
-## Github pages: https://kevinbencs.github.io/recipe-site/
-
 Itt látható egy általam létrehozott recept weboldal frontend kódja.
 
 Használt technológiák: `React, TypeScript, Sass, HTML, CSS`.
