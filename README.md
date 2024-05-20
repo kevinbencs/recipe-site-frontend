@@ -7,4 +7,4 @@ Használt technológiák: `React, TypeScript, Sass, HTML, CSS`.
 Az oldal backend kódja: 
 
 Backend nélküli recept weboldal: https://github.com/kevinbencs/recipe-site
-## Github pages: https://kevinbencs.github.io/recipe-site/
+## Backend nélküli recept weboldal Github pages-e: https://kevinbencs.github.io/recipe-site/
