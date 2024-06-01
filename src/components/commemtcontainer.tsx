@@ -65,7 +65,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
   return (
     <div className={`comment-section ${props.hideComments}`}>
       <h3>Comments</h3>
-      {props.account !== '' && <form action="" method='post' onSubmit={sendComment} className='comment-form'>
+      {props.account !== 'undefined' && <form action="" method='post' onSubmit={sendComment} className='comment-form'>
         <p contentEditable="true" onInput={handleComment} ref={commentValue} tabIndex={0}></p>
         <input type="submit" value="Send" />
       </form>}
