@@ -15,6 +15,8 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
   const commentValue = useRef<HTMLParagraphElement>(null);
   const [oldComments, setOldCmments] = useState<comments[]>([]);
   const [deleteComment, setDeleteComment] = useState<string>('');
+  const [editComment, setEditComment] = useState<string>('');
+  const [newComment, setNewComment] = useState<String>('');
 
   const sendComment = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -28,16 +30,11 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
         body: JSON.stringify({ comment: Comment, recipeId: props.recipeId })
       });
     }
-    let oldcomments: comments[] = oldComments;
-    oldcomments.push({ comment: Comment, canChange: "true", name: props.account, id: String(oldComments.length) });
-    setOldCmments(oldcomments);
+    setNewComment(Comment);
     setComment('');
     if (commentValue.current !== null) commentValue.current.innerText = '';
   };
 
-  useEffect(() => {
-    setOldCmments(oldComments.filter((comment: comments) => comment.id !== deleteComment));
-  }, [deleteComment])
 
   useEffect(() => {
     setOldCmments([]);
@@ -56,7 +53,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
         });
     }
     getComment();
-  }, [props.recipeId]);
+  }, [props.recipeId, deleteComment, editComment, newComment]);
 
   const handleComment = (e: React.ChangeEvent<HTMLParagraphElement>) => {
     setComment(e.target.innerText);
@@ -77,6 +74,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
             canChange={comment.canChange}
             id={comment.id}
             setDeleteComment={setDeleteComment}
+            setEditComment={setEditComment}
             key={uuidv4()} />)}
         {oldComments.length === 0 && <div className='no-comment'>No comment</div>}
 

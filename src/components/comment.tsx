@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, SyntheticEvent, useEffect, useRef, useState }
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>
 
-export default function CommentShow(props: { comment: string, canChange: string, name: string, id: string, setDeleteComment: Dispatcher<string> }) {
+export default function CommentShow(props: { comment: string, canChange: string, name: string, id: string, setDeleteComment: Dispatcher<string>, setEditComment: Dispatcher<string> }) {
   const [edit, setEdit] = useState<boolean>(false);
   const [comment, setComment] = useState<string>(props.comment);
   const commentRef = useRef<HTMLParagraphElement>(null);
@@ -17,7 +17,7 @@ export default function CommentShow(props: { comment: string, canChange: string,
     }
     else {
       setEdit(false);
-      setEditCancel('Edit')
+      setEditCancel('Edit');
       setShowDelete(true);
     }
   }
@@ -55,7 +55,7 @@ export default function CommentShow(props: { comment: string, canChange: string,
     });
     setEdit(false);
     setShowDelete(true);
-    props.comment = comment;
+    props.setEditComment(props.id);
   };
 
   const handleComment = (e: React.ChangeEvent<HTMLParagraphElement>) => {

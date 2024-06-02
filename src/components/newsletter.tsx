@@ -30,7 +30,7 @@ export default function Newsletter(props: { setNewsletterShown: Dispatcher<boole
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
-    if (name === 'term' || name === 'newsletter') {
+    if (name !== 'name' && name !== 'email') {
       setInputValue({ ...inputValue, [name]: checked });
     }
     else {
@@ -112,35 +112,35 @@ export default function Newsletter(props: { setNewsletterShown: Dispatcher<boole
           </div>
         }
         <form action="#" method='Post' onSubmit={handleSubmit}>
-          <label htmlFor="name">Name</label>
-          <input type="text" name="name" placeholder="name"  required onChange={handleInputChange} value={inputValue.name}/>
+          <label htmlFor="name1">Name</label>
+          <input type="text" name="name" placeholder="name" id='name1' required onChange={handleInputChange} value={inputValue.name}/>
           <label htmlFor="email">Email</label>
-          <input type="email" name="email" placeholder="email"  required onChange={handleInputChange} value={inputValue.email}/>
+          <input type="email" name="email" placeholder="email" id='email' required onChange={handleInputChange} value={inputValue.email}/>
           <section className='checkbox-container'>
             <h3>Newsletter Subscriptions</h3>
             <div className='checkbox-list'>
               <div>
-                <input type="checkbox" name="meat" onChange={handleInputChange} checked={inputValue.meat}/>
+                <input type="checkbox" name="meat" id='meat' onChange={handleInputChange} checked={inputValue.meat}/>
                 <label htmlFor="meat">Meat</label>
               </div>
               <div>
-                <input type="checkbox" name="vegetarian" onChange={handleInputChange} checked={inputValue.vegetarian}/>
+                <input type="checkbox" name="vegetarian" id='vegetarian' onChange={handleInputChange} checked={inputValue.vegetarian}/>
                 <label htmlFor="vegetarian">Vegetarian</label>
               </div>
               <div>
-                <input type="checkbox" name="dessert" onChange={handleInputChange} checked={inputValue.dessert}/>
+                <input type="checkbox" name="dessert" id='dessert' onChange={handleInputChange}  checked={inputValue.dessert}/>
                 <label htmlFor="dessert">Dessert</label>
               </div>
               <div>
-                <input type="checkbox" name="pasta" onChange={handleInputChange} checked={inputValue.pasta}/>
+                <input type="checkbox" name="pasta" id='pasta' onChange={handleInputChange} checked={inputValue.pasta}/>
                 <label htmlFor="pasta">Pasta</label>
               </div>
               <div>
-                <input type="checkbox" name="seafood" onChange={handleInputChange} checked={inputValue.seafood}/>
+                <input type="checkbox" name="seafood" id='seafood' onChange={handleInputChange} checked={inputValue.seafood}/>
                 <label htmlFor="seafood">Seafood</label>
               </div>
               <div>
-                <input type="checkbox" name="side" className='side' onChange={handleInputChange} checked={inputValue.side}/>
+                <input type="checkbox" name="side" id='side' onChange={handleInputChange} checked={inputValue.side}/>
                 <label htmlFor="side">Side</label>
               </div>
             </div>
