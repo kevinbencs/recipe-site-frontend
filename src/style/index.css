@@ -61,7 +61,7 @@ header .header-newsletter .newsletter-search-button .newsletter-on-click {
   padding: 10px 0;
   color: rgb(200, 200, 200);
   padding: 5px;
-  outline: 1px solid green;
+  border-radius: 5px;
 }
 header .header-newsletter .newsletter-search-button .newsletter-on-click:hover {
   color: whitesmoke;
@@ -73,19 +73,20 @@ header .header-newsletter .newsletter-search-button .newsletter-on-click:focus {
 }
 header .header-newsletter .newsletter-search-button .search-show-button {
   background: none;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 6px;
   cursor: pointer;
 }
 header .header-newsletter .newsletter-search-button .search-show-button img {
   width: 40px;
   background: none;
+  filter: invert(100%);
 }
 header .header-newsletter .newsletter-search-button .search-show-button:hover {
-  outline: 1px solid green;
+  background-color: green;
 }
 header .header-newsletter .newsletter-search-button .search-show-button:focus {
-  outline: 1px solid green;
+  background-color: green;
 }
 header .header-newsletter .newsletter-search-button .signin-signup {
   display: flex;
@@ -95,20 +96,14 @@ header .header-newsletter .newsletter-search-button .signin-signup {
 header .header-newsletter .newsletter-search-button .signin-signup a {
   color: rgb(200, 200, 200);
   padding: 5px;
+  border-radius: 5px;
 }
 header .header-newsletter .newsletter-search-button .signin-signup a:hover {
   color: whitesmoke;
+  background-color: green;
 }
 header .header-newsletter .newsletter-search-button .signin-signup a:focus {
   color: whitesmoke;
-}
-header .header-newsletter .newsletter-search-button .signin-signup .signup {
-  outline: 1px solid green;
-}
-header .header-newsletter .newsletter-search-button .signin-signup .signup:hover {
-  background-color: green;
-}
-header .header-newsletter .newsletter-search-button .signin-signup .signup:focus {
   background-color: green;
 }
 header .header-newsletter .newsletter-search-button .dropbtn {

@@ -53,7 +53,7 @@ header {
                 padding: 10px 0;
                 color: $header_text_color;
                 padding: 5px;
-                outline: 1px solid green;
+                border-radius: 5px;
             }
 
             .newsletter-on-click:hover {
@@ -68,23 +68,26 @@ header {
 
             .search-show-button {
                 background: none;
-                border-radius: 10px;
+                border-radius: 5px;
                 padding: 6px;
                 cursor: pointer;
+                
 
                 img {
                     width: 40px;
                     background: none;
+                    filter: invert(100%);
+                           
                 }
-
             }
 
             .search-show-button:hover {
-                outline: 1px solid green;
+                background-color:  green;
+                
             }
 
             .search-show-button:focus {
-                outline: 1px solid green;
+                background-color:  green;
             }
 
             .signin-signup {
@@ -95,27 +98,18 @@ header {
                 a {
                     color: $header_text_color;
                     padding: 5px;
+                    border-radius: 5px;
                 }
 
                 a:hover {
                     color: $header_hover_text_color;
+                    background-color: green;
                 }
 
                 a:focus {
                     color: $header_hover_text_color;
-
-                }
-
-                .signup {
-                    outline: 1px solid green;
-                }
-
-                .signup:hover {
                     background-color: green;
-                }
 
-                .signup:focus {
-                    background-color: green;
                 }
             }
 
