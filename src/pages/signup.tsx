@@ -23,7 +23,7 @@ export default function Signup() {
     name: '', email: '', password: '', password2: '', newsletter: false, term: false
   });
   const [err, setErr] = useState<msg[]>([]);
-  const [errHasAccount, setErrHasAccount] = useState<string>('');
+  const [errHasAccount, setErrHasAccount] = useState<msg[]>([]);
   const [submitOk, setSubmitOk] = useState<string>('');
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function Signup() {
         if (res.status === 'success') {
           setSignUpValue({ name: '', email: '', password: '', password2: '', newsletter: false, term: false });
           setErr([]);
-          setErrHasAccount('');
+          setErrHasAccount([]);
           setSubmitOk(res.message);
           
         }
@@ -73,7 +73,7 @@ export default function Signup() {
         }
         else if (res.status !== 'error') {
           setErr(res.errors.errors);
-          setErrHasAccount('');
+          setErrHasAccount([]);
           setSubmitOk('');
         }
       }
@@ -91,9 +91,9 @@ export default function Signup() {
           <div className='error'>{err.map((r: msg) => <div>{r.msg}</div>)}</div>
         }
 
-        {errHasAccount !== '' &&
+        {errHasAccount.length !== 0 &&
           <div className='error'>
-            <div>{errHasAccount}</div>
+            <div>{errHasAccount.map((r: msg) => <div>{r.msg}</div>)}</div>
           </div>
         }
 
