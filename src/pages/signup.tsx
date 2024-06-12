@@ -1,20 +1,7 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FormValue } from '../types/apitype';
 
-
-interface FormValue {
-  name: string,
-  email: string,
-  password: string,
-  password2: string,
-  newsletter: boolean,
-  term: boolean
-};
-
-interface msg {
-  msg: string,
-
-}
 
 export default function Signup() {
   const [password1, setPassword1] = useState<string>('password');
@@ -22,8 +9,8 @@ export default function Signup() {
   const [signUpValue, setSignUpValue] = useState<FormValue>({
     name: '', email: '', password: '', password2: '', newsletter: false, term: false
   });
-  const [err, setErr] = useState<msg[]>([]);
-  const [errHasAccount, setErrHasAccount] = useState<msg[]>([]);
+  const [err, setErr] = useState<string[]>([]);
+  const [errHasAccount, setErrHasAccount] = useState<string[]>([]);
   const [submitOk, setSubmitOk] = useState<string>('');
 
   useEffect(() => {
@@ -88,12 +75,12 @@ export default function Signup() {
 
         <h2>Sign up</h2>
         {err.length !== 0 &&
-          <div className='error'>{err.map((r: msg) => <div>{r.msg}</div>)}</div>
+          <div className='error'>{err.map((r: string) => <div>{r}</div>)}</div>
         }
 
         {errHasAccount.length !== 0 &&
           <div className='error'>
-            {errHasAccount.map((r: msg) => <div>{r.msg}</div>)}
+            {errHasAccount.map((r: string) => <div>{r}</div>)}
           </div>
         }
 

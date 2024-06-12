@@ -68,4 +68,18 @@ export interface comments {
     canChange: string,
     name: string,
     id: string
-  }
+};
+
+export interface FormValue {
+    name: string,
+    email: string,
+    password: string,
+    password2: string,
+    newsletter: boolean,
+    term: boolean
+};
+
+export interface FormValueSignIn{
+    email: string,
+    password: string
+  };

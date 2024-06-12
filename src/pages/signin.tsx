@@ -1,23 +1,16 @@
 import { SyntheticEvent, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FormValueSignIn } from '../types/apitype';
 
-interface FormValue{
-  email: string,
-  password: string
-};
 
-interface msg{
-  msg: string,
-
-}
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
 export default function Signin(props:{setAccount: Dispatcher<string>}) {
   const [password1, setPassword1] = useState<string>('password');
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [signInValue, setSignInValue ] = useState<FormValue>({email: '', password: ''});
-  const [err, setErr] =useState<msg[]>([]);
-  const [errHasAccount, setErrHasAccount] = useState<string>('');
+  const [signInValue, setSignInValue ] = useState<FormValueSignIn>({email: '', password: ''});
+  const [err, setErr] =useState<string[]>([]);
+  const [errHasAccount, setErrHasAccount] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +43,7 @@ export default function Signin(props:{setAccount: Dispatcher<string>}) {
       .then(res => {
         if(res.status === 'success'){
           setErr([]);
-          setErrHasAccount('');
+          setErrHasAccount([]);
           props.setAccount(res.data);
           navigate('/');
         }
@@ -60,7 +53,7 @@ export default function Signin(props:{setAccount: Dispatcher<string>}) {
         }
         else if(res.status !== 'error'){
           setErr(res.errors.errors);
-          setErrHasAccount('');
+          setErrHasAccount([]);
         }
       });
   };
@@ -70,12 +63,12 @@ export default function Signin(props:{setAccount: Dispatcher<string>}) {
       <div className='form-container'>
         <h2>Sign in</h2>
         {err.length !== 0 &&
-          <div className='error'>{err.map((r: msg) => <div>{r.msg}</div>)}</div>
+          <div className='error'>{err.map((mes: string) => <div>{mes}</div>)}</div>
         }
         
-        {errHasAccount !== '' && 
+        {errHasAccount.length !== 0 && 
           <div className='error'>
-            <div>{errHasAccount}</div>
+            {errHasAccount.map((mes:string) => <div>{mes}</div>)}
           </div>
         }
         <form action="/" method='Post' onSubmit={handleSubmit}>
