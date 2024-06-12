@@ -93,7 +93,7 @@ export default function Signup() {
 
         {errHasAccount.length !== 0 &&
           <div className='error'>
-            <div>{errHasAccount.map((r: msg) => <div>{r.msg}</div>)}</div>
+            {errHasAccount.map((r: msg) => <div>{r.msg}</div>)}
           </div>
         }
 
