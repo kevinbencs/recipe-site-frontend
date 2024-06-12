@@ -62,3 +62,10 @@ export interface IngredientMeasure {
     strIngredient: string,
     strMeasure: string
 };
+
+export interface comments {
+    comment: string,
+    canChange: string,
+    name: string,
+    id: string
+  }

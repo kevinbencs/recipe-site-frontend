@@ -3,9 +3,8 @@ import { SyntheticEvent, useState, useEffect } from 'react';
 import Recipeitem from '../components/recipeitem';
 import { useNavigate } from "react-router-dom";
 import {RecipeTypeHome } from '../types/apitype';
+import { v4 as uuidv4 } from 'uuid';
 
-
-const url: string = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 
 export default function Home() {
   const navigate = useNavigate()
@@ -104,19 +103,19 @@ export default function Home() {
             strMealThumb={recipe.strMealThumb}
             strCategory={recipe.strCategory}
             strInstructions={recipe.strInstructions}
-            key={recipe.id} />)}
+            key={uuidv4()} />)}
           {recipeItems2 !== null && recipeItems2?.map(recipe => <Recipeitem
             strMeal={recipe.strMeal}
             strMealThumb={recipe.strMealThumb}
             strCategory={recipe.strCategory}
             strInstructions={recipe.strInstructions}
-            key={recipe.id} />)}
+            key={uuidv4()} />)}
           {recipeItems3 !== null && recipeItems3?.map(recipe => <Recipeitem
             strMeal={recipe.strMeal}
             strMealThumb={recipe.strMealThumb}
             strCategory={recipe.strCategory}
             strInstructions={recipe.strInstructions}
-            key={recipe.id} />)}
+            key={uuidv4()} />)}
 
         </div>
       </article>

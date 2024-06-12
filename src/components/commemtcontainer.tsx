@@ -2,13 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import CommentShow from './comment';
 import { SyntheticEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { comments } from '../types/apitype';
 
-interface comments {
-  comment: string,
-  canChange: string,
-  name: string,
-  id: string
-}
 
 export default function CommemtContainer(props: { recipeId: number, hideComments: string, account: string }) {
   const [Comment, setComment] = useState<string>('');
@@ -76,7 +71,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
             setDeleteComment={setDeleteComment}
             setEditComment={setEditComment}
             key={uuidv4()} />)}
-        {oldComments.length === 0 && <div className='no-comment'>No comment</div>}
+        {oldComments.length === 0 && <div className='no-comment'>No comments</div>}
 
       </div>
     </div>
