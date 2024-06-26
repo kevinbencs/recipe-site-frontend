@@ -1,17 +1,24 @@
-# Recept weboldal
+# Recipe  website
 
-Itt látható egy általam létrehozott recept weboldal frontend kódja.
+Here is the frontend code for a recipe website.
 
-Használt technológiák: `React, TypeScript, Sass, HTML, CSS, uuid`.
+Technologies used: 
+-React 
+-TypeScript,
+-Sass 
+-HTML
+-CSS
 
-Az oldal backend kódja: https://github.com/kevinbencs/recipe-site-backend
+The backend code for the website: https://github.com/kevinbencs/recipe-site-backend
 
-Az oldal megtekintése: https://recipe-deploye.vercel.app/
+The website can be viewed here: https://recipe-deploye.vercel.app/
 
 <br></br>
 
-## Az oldal leírása
+## Description of the Page
 
-A weboldal stílusát a `/src/style` könyvtárban lévő sass fájlok határozzák meg. A különböző oldalak a `pages` könyvtárban találhatóak. Azok a tartalmak, melyek az össes olalon megtalálhatók, a `comnponents` könyvtárban láthatók. Itt lelhető fel a `header` és így a `menu` (`slidermenu` és a `hamburgermenu`), a `footer`, a `cookie` és a `scolltop` rész, valamint a `recipe.tsx`-hez tartozó `comment` is.
+
+
+The style of the website was built by the Sass files. These files are in the `/src/style directory`. The different pages are in the `pages` directory. Contents that are on all pages are in the `components` directory. You will find the `header`, the `footer`, the `cookie section`, the `scroll-to-top component`, and the `comments` related to the recipe.tsx here. The components directory also includes the `slider menu` and the `hamburger menu`.
 
 
