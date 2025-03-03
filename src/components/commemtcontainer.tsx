@@ -16,13 +16,13 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
   const sendComment = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (Comment !== '') {
-      await fetch('/sendcomment', {
+      await fetch(`/sendcomment/:${props.recipeId}`, {
         method: "POST",
         headers: {
           "Accept": "aplication/json, text/plain",
           "Content-type": "application/json"
         },
-        body: JSON.stringify({ comment: Comment, recipeId: props.recipeId })
+        body: JSON.stringify({ comment: Comment })
       });
     }
     setNewComment(Comment);
@@ -34,14 +34,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
   useEffect(() => {
     setOldCmments([]);
     const getComment = async () => {
-      fetch('/getcomment', {
-        method: "POST",
-        headers: {
-          "Accept": "application/json, text/plain",
-          "Content": "apllication/json"
-        },
-        body: JSON.stringify({ recipeId: props.recipeId })
-      })
+      fetch(`/api/comments/${props.recipeId}`)
         .then(data => data.json())
         .then(res => {
           if (res.length !== 0) setOldCmments(res as unknown as comments[]);
@@ -56,7 +49,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
 
   return (
     <div className={`comment-section ${props.hideComments}`}>
-      <h3>Comments</h3>
+      <h2>Comments</h2>
       {props.account !== 'undefined' && <form action="" method='post' onSubmit={sendComment} className='comment-form'>
         <p contentEditable="true" onInput={handleComment} ref={commentValue} tabIndex={0}></p>
         <input type="submit" value="Send" />
@@ -64,7 +57,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
 
       <div className='comment-container-container'>
         {oldComments.length !== 0 &&
-          oldComments.map((comment: comments) => <CommentShow comment={comment.comment}
+          oldComments.map((comment: comments) => <CommentShow recipeId={props.recipeId} comment={comment.comment}
             name={comment.name}
             canChange={comment.canChange}
             id={comment.id}

@@ -35,7 +35,7 @@ export default function Newpassword() {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     await fetch('/newpassword', {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Accept": "application/json, text/plain",
         "Content-type": "application/json",

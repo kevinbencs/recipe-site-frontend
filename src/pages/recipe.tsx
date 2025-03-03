@@ -1,10 +1,11 @@
-import { useState, useEffect, KeyboardEvent, SetStateAction, Dispatch, useRef} from 'react';
+import { useState, useEffect, KeyboardEvent, SetStateAction, Dispatch, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import RecipeDiscription from '../components/recipediscription';
 import Recipeitem from '../components/recipeitem';
 import CommemtContainer from '../components/commemtcontainer';
-import { RecipeTypeHome, RecipeType, IngredientMeasure,} from '../types/apitype';
+import { RecipeTypeHome, RecipeType, IngredientMeasure, } from '../types/apitype';
 import { v4 as uuidv4 } from 'uuid';
+import useSWR from 'swr';
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
@@ -39,20 +40,30 @@ const getIngredientsMeasures = (result: RecipeType, setIngredientsMeasures: Disp
 
 
 
+const fetcher = async (url: string): Promise<{ res: { rec: RecipeType, num: number } | undefined, failed: string | undefined }> => {
+  const res = await fetch(`${url}`);
 
-export default function Recipe(props: {account: string}) {
-  const [recipeItems, setRecipeItems] = useState<RecipeTypeHome[] | null>(null);
-  const [canCallApi, setCanCallApi] = useState<boolean>(true);
-  const [mealsNumber, setMealsNumber] = useState<number>(0);
-  const [loadMealsNumber, setLoadMealsNumber] = useState<number>(0);
-  const [mealsId, setMealsId] = useState<RecipeTypeHome[] | null>(null);
-  const [youtubeVideo, setYoutubeVideo] = useState<string | undefined>('');
-  const [recipeDiscription, setRecipeDiscription] = useState<RecipeType | null>(null);
+  if (!res.ok) {
+    const error = new Error();
+    error.cause = await res.json().then((data: { error: string }) => data.error)
+    console.error(error.cause)
+    throw error
+  }
+
+  return res.json()
+}
+
+
+
+
+
+export default function Recipe(props: { account: string }) {
+  const [recipeItems, setRecipeItems] = useState<RecipeTypeHome[]>([]);
   const [ingredientsMeasures, setIngredientsMeasures] = useState<IngredientMeasure[]>([]);
   const [hideRecipeText, setHideRecipeText] = useState<string>('hide-text');
   const [hideRecipeIngredients, setHideRecipeIngredients] = useState<string>('hide-ingredients');
   const [hideComments, setHideComments] = useState<string>('hide-comments');
-  const [recipeId, setRecipeId] = useState<number>(0);
+  const [err, setErr] = useState<string>('')
   const [readMore, setReadMore] = useState<boolean>(true);
   const mainRef = useRef<HTMLUListElement | null>(null);
 
@@ -60,95 +71,40 @@ export default function Recipe(props: {account: string}) {
   const { category } = useParams();
   const navigate = useNavigate();
 
+  const { data, error, isLoading } = useSWR(`/api/title/${name}`, fetcher)
+
+  if (!error && !isLoading && (data === undefined || data.failed !== undefined)) navigate('/');
+
   //recipe loading
   useEffect(() => {
-    setRecipeItems(null);
-    const callRecipeDiscriptionApi = async () => {
-      try {
-        const response: Response = await fetch('/recipe',{
-          method: "POST",
-          headers:{
-            "Accept": "application/json, text/plain",
-            "Content-type": "application/json"
-          },
-          body: JSON.stringify({name: name?.replaceAll('-', ' ')})
-        } );
-        const data: JSON = await response.json();
-        const meal: RecipeType[] | null = data as unknown as RecipeType[] | null;
-        if (meal?.length === 0 || meal === null) {
-          navigate('/');
-        }
-        else {
-          setRecipeDiscription(meal[0]);
-          setYoutubeVideo(meal[0]?.strYoutube.replace('watch?v=', 'embed/'));
-          getIngredientsMeasures(meal[0], setIngredientsMeasures);
-          setRecipeId(Number(meal[0].id));
-        }
-      }
-      catch (e) {
-        console.error('Error1:', e);
-      }
-    };
+    setRecipeItems([]);
 
-    const callRecipesApi = async () => {
-      try {
-        const response: Response = await fetch('/category',{
-          method: 'POST',
-          headers:{
-            "Accept": "application/json, text/plain",
-            "Content": "apllication/json"
-          },
-          body: JSON.stringify({category: category?.replaceAll('-', ' ')})
-        });
-        const data: JSON = await response.json();
-        const meals: RecipeTypeHome[] | null = data as unknown as RecipeTypeHome[];
-
-        let mealById: RecipeTypeHome[] = [];
-        setMealsNumber(meals.length);
-        setMealsId(meals);
-        for (let i = 0; i < 6 && i < meals.length; i++) {
-          const recipe: RecipeTypeHome | null = meals[i] as unknown as RecipeTypeHome
-
-          mealById.push(recipe);
-        }
-        setRecipeItems(mealById);
-        setLoadMealsNumber(6);
-      }
-      catch (e) {
-        console.error('Error2: ', e);
-      }
-    };
     setReadMore(true);
     setHideRecipeIngredients('hide-ingredients');
     setHideRecipeText('hide-text');
     setHideComments('hide-comments');
-    callRecipeDiscriptionApi();
-    callRecipesApi()
   }, [name, category]);
+
+  useEffect(() => {
+    if (data && data.res) {
+      getIngredientsMeasures(data.res.rec, setIngredientsMeasures)
+    }
+  }, [data])
 
 
   //More recipe loading when page scroll
   useEffect(() => {
     const trackScrolling = async () => {
-      if (canCallApi && mainRef.current !== null) {
-        if (mainRef.current.getBoundingClientRect().bottom < window.innerHeight && loadMealsNumber < mealsNumber && mealsNumber > 6 && mealsId) {
-          setCanCallApi(false);
-          let mealById: RecipeTypeHome[] = [];
-
-          for (let i = loadMealsNumber; i < loadMealsNumber + 6 && i < mealsNumber; i++) {
-            const recipe: RecipeTypeHome | null = mealsId[i] as unknown as RecipeTypeHome;
-            mealById.push(recipe);
+      if (mainRef.current !== null) {
+        if (mainRef.current.getBoundingClientRect().bottom < window.innerHeight && data !== undefined && data.res !== undefined && recipeItems.length < data.res.num) {
+          try {
+            const res = await fetch(`/api/morerecipe/${name}/${recipeItems.length}`)
+            const resJson = await res.json() as { res: RecipeTypeHome[] | undefined, error: string | undefined };
+            if (resJson.res) setRecipeItems([...recipeItems, ...resJson.res])
+            if (resJson.error) setErr(resJson.error)
+          } catch (error) {
+            console.error(error)
           }
-
-          if (recipeItems) {
-            setRecipeItems([...recipeItems, ...mealById]);
-          }
-          else {
-            setRecipeItems(mealById);
-          }
-
-          setLoadMealsNumber(loadMealsNumber + 6);
-          setCanCallApi(true);
         }
       }
     };
@@ -175,55 +131,61 @@ export default function Recipe(props: {account: string}) {
     }
   };
 
-  
+
 
 
   return (
     <main ref={mainRef}>
-      <div className='recipe-discription'>
-        <div className='recipe-header' style={{ backgroundImage: `url(${recipeDiscription?.strMealThumb})` }}>
-          <h2>
-            {recipeDiscription !== null &&
-            recipeDiscription.strMeal.slice(0,1).toLocaleUpperCase() + recipeDiscription.strMeal.slice(1,recipeDiscription.strMeal.length)}
-          </h2>
-        </div>
-
-        <div className='recipe-main '>
-          <div className={`recipe-video-text ${hideRecipeText}`}>
-            {youtubeVideo !== '' &&
-              <iframe src={youtubeVideo} width="560" height="315" frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin" allowFullScreen title={recipeDiscription?.strMeal}>
-              </iframe>}
-            <p>
-              {recipeDiscription?.strInstructions.replaceAll('\r\n\r\n',' \n ')}
-            </p>
+      {error && <div>{error}</div>}
+      {isLoading && <div className='loading-content'>...Loading</div>}
+      {(data !== undefined && data.res !== undefined) &&
+        <div className='recipe-discription'>
+          <div className='recipe-header' style={{ backgroundImage: `url(${data.res.rec.strMealThumb})` }}>
+            {
+              data.res !== undefined &&
+              <h1>
+                {data.res.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res.rec.strMeal.length)}
+              </h1>
+            }
           </div>
 
-          <div className={`recipe-ingredients-container ${hideRecipeIngredients}`}>
-            <div className="recipe-ingredients">
-              <div className='decoration'></div>
-              <div className='decoration'></div>
-              <ul>
-                {ingredientsMeasures.map(r => <RecipeDiscription strIngredient={r.strIngredient} strMeasure={r.strMeasure} key={uuidv4()} />)}
-              </ul>
-
-              <div className='decoration'></div>
-              <div className='decoration'></div>
+          <div className='recipe-main '>
+            <div className={`recipe-video-text ${hideRecipeText}`}>
+              {data.res.rec.strYoutube !== '' &&
+                <iframe src={data.res.rec.strYoutube} width="560" height="315" frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin" allowFullScreen title={data.res.rec.strMeal}>
+                </iframe>}
+              <p>
+                {data.res.rec.strInstructions.replaceAll('\r\n\r\n', ' \n ')}
+              </p>
             </div>
+
+            <div className={`recipe-ingredients-container ${hideRecipeIngredients}`}>
+              <div className="recipe-ingredients">
+                <div className='decoration'></div>
+                <div className='decoration'></div>
+                <ul>
+                  {ingredientsMeasures.length > 0 && ingredientsMeasures.map(r => <RecipeDiscription strIngredient={r.strIngredient} strMeasure={r.strMeasure} key={uuidv4()} />)}
+                </ul>
+
+                <div className='decoration'></div>
+                <div className='decoration'></div>
+              </div>
+            </div>
+
+            <CommemtContainer recipeId={Number(data.res.rec.id)} hideComments={hideComments} account={props.account} />
+
+            {readMore && <div className='read-more' onClick={handleClick} tabIndex={0} onKeyDown={handleKeyDown}>
+              Read more
+            </div>}
           </div>
+        </div>}
 
-          <CommemtContainer recipeId={recipeId} hideComments={hideComments} account={props.account}/>
-
-          {readMore && <div className='read-more' onClick={handleClick} tabIndex={0} onKeyDown={handleKeyDown}>
-            Read more
-          </div>}
-        </div>
-      </div>
       {recipeItems !== null &&
         <section className='another-recipes'>
           <h2>You’ll Also Love</h2>
-          <div id="recipes-container">{recipeItems?.filter(recipe => recipe.strMeal !== recipeDiscription?.strMeal).map(meal => <Recipeitem
+          <div id="recipes-container">{recipeItems?.map(meal => <Recipeitem
             strMeal={meal.strMeal}
             strMealThumb={meal.strMealThumb}
             strCategory={category!.replaceAll('-', ' ')}
@@ -232,7 +194,10 @@ export default function Recipe(props: {account: string}) {
           </div>
         </section>
       }
-      {loadMealsNumber < mealsNumber && <div className='loading-content'>Loading ...</div>}
+      {err !== '' &&
+        <div>{err}</div>
+      }
+      {(data && data.res && data.res.num > recipeItems.length) && <div className='loading-content'>Loading ...</div>}
     </main>
   )
 }

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, SyntheticEvent, useEffect, useRef, useState }
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>
 
-export default function CommentShow(props: { comment: string, canChange: string, name: string, id: string, setDeleteComment: Dispatcher<string>, setEditComment: Dispatcher<string> }) {
+export default function CommentShow(props: {recipeId: number ,comment: string, canChange: string, name: string, id: string, setDeleteComment: Dispatcher<string>, setEditComment: Dispatcher<string> }) {
   const [edit, setEdit] = useState<boolean>(false);
   const [comment, setComment] = useState<string>(props.comment);
   const commentRef = useRef<HTMLParagraphElement>(null);
@@ -23,13 +23,12 @@ export default function CommentShow(props: { comment: string, canChange: string,
   }
 
   const handleDelete = async () => {
-    await fetch('/deletecomment', {
-      method: "POST",
+    await fetch(`/deletecomment/:${props.recipeId}`, {
+      method: "DELETE",
       headers: {
         "Accept": "application/json, text/plain",
         "Content-type": "application/json"
-      },
-      body: JSON.stringify({ id: props.id })
+      }
     });
     props.setDeleteComment(props.id);
   }
@@ -45,13 +44,13 @@ export default function CommentShow(props: { comment: string, canChange: string,
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await fetch('/updatecomment', {
-      method: "POST",
+    await fetch(`/updatecomment/:${props.recipeId}`, {
+      method: "PATCH",
       headers: {
         "Accept": "application/json, text/plain",
         "Content-type": "application/json"
       },
-      body: JSON.stringify({ comment: comment, id: props.id })
+      body: JSON.stringify({ comment: comment })
     });
     setEdit(false);
     setShowDelete(true);

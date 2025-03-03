@@ -34,6 +34,15 @@ home.tsx and search.tsx
             width: 400px;
             text-align: center;
         }
+        h1{
+            font-size: max(2.5vw, 35px);
+            position: relative;
+            top: calc(-30px - 2vw);
+            color: $main-text-color;
+            display: inline-block;
+            width: 400px;
+            text-align: center;
+        }
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -206,6 +215,9 @@ responsive desing
         .form-h2{
     
             h2{
+                top: -60px;
+            }
+            h1{
                 top: -60px;
             }
         }

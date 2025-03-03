@@ -3,38 +3,53 @@ import { SyntheticEvent, useState, useEffect } from 'react';
 import Recipeitem from '../components/recipeitem';
 import { useNavigate, useParams } from "react-router-dom";
 import { RecipeTypeHome } from '../types/apitype';
+import useSWR from 'swr'
 
+export const fetcher = async (url: string): Promise<{ res: { rec: RecipeTypeHome[], num: number } }> => {
+  const res = await fetch(`${url}`);
 
-const url: string = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+  if (!res.ok) {
+    const error = new Error();
+    error.cause = await res.json().then((data: { error: string }) => data.error)
+    console.error(error.cause)
+    throw error
+  }
+
+  return res.json()
+}
+
 
 export default function Search() {
   const navigate = useNavigate();
-  const [recipeItems, setRecipeItems] = useState<Array<RecipeTypeHome> | null>(null);
+  const [recipeItems, setRecipeItems] = useState<Array<RecipeTypeHome>>([]);
   const { name } = useParams<string>();
 
+  const { data, error, isLoading } = useSWR(`/api/search/${name}`, fetcher)
 
   useEffect(() => {
     const callApi = async () => {
-      try {
-        const target: string | undefined = name?.replaceAll('-', ' ');
-        const response: Response = await fetch('/',{
-          method: "POST",
-          headers: {
-            "Accept": "application/json, text/plain",
-            "Content-type": "application/json"
-          },
-          body: JSON.stringify({ name: target}),
-        });
-        const data: JSON = await response.json();
-        const meals: RecipeTypeHome[] | null = data as unknown as RecipeTypeHome[] | null;
-        setRecipeItems(meals);
-      }
-      catch (e) {
-        console.error('Error: ', e);
-      }
-    };
+      if (data && (recipeItems.length + data.res.rec.length < data.res.num)) {
+        try {
+          const response: Response = await fetch(`/api/search/${name}/${recipeItems.length}`);
+          const data2 = await response.json() as {res: RecipeTypeHome[] | undefined, error: string | undefined };
+          if(data2.res) setRecipeItems([...recipeItems,...data2.res ]);
+        }
+        catch (e) {
+          console.error('Error: ', e);
+        }
+      };
 
-    callApi();
+    }
+    document.addEventListener('scroll', callApi);
+
+    return () => {
+      document.removeEventListener('scroll', callApi);
+    }
+  });
+
+  useEffect(() => {
+
+    setRecipeItems([])
   }, [name]);
 
   //search
@@ -59,9 +74,9 @@ export default function Search() {
           <div></div>
           <div></div>
           <div></div>
-          <h2>
+          <h1>
             Find recipes
-          </h2>
+          </h1>
         </div>
 
         <form action="/" method="Get" onSubmit={handleSubmit}>
@@ -70,17 +85,30 @@ export default function Search() {
         </form>
       </section>
       <article>
-        <h2 className="recipes-container-header">Recipes</h2>
+        <h2 className="recipes-container-header">{name?.replaceAll('-',' ')}</h2>
         <div id="recipes-container">
-          {recipeItems !== null &&
-            recipeItems?.map((meal: RecipeTypeHome) => <Recipeitem
+          {error && <div>{error}</div>}
+          {isLoading && <div className='loading-content'>...Loading</div>}
+          {data !== undefined &&
+            data.res.rec.map((meal: RecipeTypeHome) => <Recipeitem
               strMeal={meal.strMeal}
               strMealThumb={meal.strMealThumb}
               strCategory={meal.strCategory}
               strInstructions={meal.strInstructions}
               key={meal.id} />)
           }
-          {recipeItems === null &&
+          {recipeItems.length > 0 &&
+            recipeItems.map((meal: RecipeTypeHome) => <Recipeitem
+              strMeal={meal.strMeal}
+              strMealThumb={meal.strMealThumb}
+              strCategory={meal.strCategory}
+              strInstructions={meal.strInstructions}
+              key={meal.id} />)
+          }
+          {(data!== undefined && (data.res?.rec.length + recipeItems.length < data.res?.num )) &&
+          <div className='loading-content'>...Loading</div>
+          }
+          {(data === undefined || data.res.num === 0) &&
             <div>Sorry, there is no {name?.replaceAll('-', ' ')} recipe.</div>
           }
         </div>

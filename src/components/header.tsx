@@ -121,10 +121,10 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
   return (
     <header>
       <div className='header-newsletter'>
-        <nav>
-          <h1>
+        <nav className='logo'>
+
             <Link to='/'>Recipe</Link>
-          </h1>
+
         </nav>
         <div className='newsletter-search-button'>
 

@@ -1,66 +1,30 @@
 import SearchImg from '../img/search2.png';
-import { SyntheticEvent, useState, useEffect } from 'react';
+import { SyntheticEvent } from 'react';
 import Recipeitem from '../components/recipeitem';
 import { useNavigate } from "react-router-dom";
-import {RecipeTypeHome } from '../types/apitype';
 import { v4 as uuidv4 } from 'uuid';
+import useSWR from 'swr';
+import { RecipeTypeHome } from "../types/apitype";
 
+
+
+const fetcher = async (url:string) : Promise<{res:RecipeTypeHome[]}> => {
+  const res = await fetch('/homePage');
+
+  if(!res.ok){
+    const error = new Error();
+    error.cause = await res.json().then((data: {error: string}) => data.error)
+    console.error(error.cause)
+    throw error
+  }
+
+  return res.json()
+}
 
 export default function Home() {
   const navigate = useNavigate()
-  const [recipeItems1, setRecipeItems1] = useState<RecipeTypeHome[] | null>(null);
-  const [recipeItems2, setRecipeItems2] = useState<RecipeTypeHome[] | null>(null);
-  const [recipeItems3, setRecipeItems3] = useState<RecipeTypeHome[] | null>(null);
+  const {data, error, isLoading} = useSWR('/homePage',fetcher)
 
-
-  useEffect(() => {
-    const callApi = async () => {
-      try {
-        const apiData1: Response = await fetch('/',{
-          method: "POST",
-          headers: {
-            "Accept": "application/json, text/plain",
-            "Content-type": "application/json"
-          },
-          body: JSON.stringify({ name: 'beef and' }),
-        });
-        const apiData2: Response = await fetch('/',{
-          method: "POST",
-          headers: {
-            "Accept": "application/json, text/plain",
-            "Content-type": "application/json"
-          },
-          body: JSON.stringify({ request: "name", name: 'alfredo' }),
-        });
-        const apiData3: Response = await fetch('/',{
-          method: "POST",
-          headers: {
-            "Accept": "application/json, text/plain",
-            "Content-type": "application/json"
-          },
-          body: JSON.stringify({ request: "name", name: 'eggplant with' }),
-        });
-
-        const data1 = await apiData1.json();
-        const data2 = await apiData2.json();
-        const data3 = await apiData3.json();
-
-        const meals1 = data1 as unknown as RecipeTypeHome[] | null;
-        const meals2 = data2 as unknown as RecipeTypeHome[] | null;
-        const meals3 = data3 as unknown as RecipeTypeHome[] | null;
-
-        setRecipeItems1(meals1);
-        setRecipeItems2(meals2);
-        setRecipeItems3(meals3);
-      }
-      catch (e) {
-        console.error('Error ', e)
-      }
-
-    }
-
-    callApi();
-  }, []);
 
   //search
   const handleSubmit = (e: SyntheticEvent) => {
@@ -96,27 +60,17 @@ export default function Home() {
         </form>
       </section>
       <article>
-        <h2 className="recipes-container-header">Recipes</h2>
+        <h1 className="recipes-container-header">Recipes</h1>
         <div id="recipes-container">
-          {recipeItems1 !== null && recipeItems1?.map(recipe => <Recipeitem
+          {error && <div>{error}</div> }
+          {isLoading && <div>...Loading</div> }
+          {data !== undefined  && data.res?.map(recipe => <Recipeitem
             strMeal={recipe.strMeal}
             strMealThumb={recipe.strMealThumb}
             strCategory={recipe.strCategory}
             strInstructions={recipe.strInstructions}
             key={uuidv4()} />)}
-          {recipeItems2 !== null && recipeItems2?.map(recipe => <Recipeitem
-            strMeal={recipe.strMeal}
-            strMealThumb={recipe.strMealThumb}
-            strCategory={recipe.strCategory}
-            strInstructions={recipe.strInstructions}
-            key={uuidv4()} />)}
-          {recipeItems3 !== null && recipeItems3?.map(recipe => <Recipeitem
-            strMeal={recipe.strMeal}
-            strMealThumb={recipe.strMealThumb}
-            strCategory={recipe.strCategory}
-            strInstructions={recipe.strInstructions}
-            key={uuidv4()} />)}
-
+          
         </div>
       </article>
     </main>
