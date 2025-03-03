@@ -9,51 +9,35 @@ import Signup from './pages/signup';
 import Newpassword from './pages/newpassword';
 import Forgotpassword from './pages/forgotpassword';
 import ScrollTop from './components/scrolltop';
-import { useEffect, useState } from 'react';
+import { useLogged } from './components/userProvider';
+
 
 function App() {
-  const [account, setAccount] = useState<string>('undefined');
-
-  useEffect(() => {
-    const getAccount = async() => {
-      await fetch('/getaccount',{
-        method:"GET",
-        headers: {
-          "Accept": "application/json, text/plain",
-          "Content": "apllication/json"
-        }
-      })
-      .then(data => data.json())
-      .then(res => {
-        setAccount(res.name);
-      })
-    }
-    getAccount();
-  },[])
+  const { userName } = useLogged()
 
   return (
     <BrowserRouter>
       <ScrollTop />
-      <Layout account={account} setAccount={setAccount}>
+      <Layout>
         <Routes>
           <Route path='*' element={<Navigate to='/' replace={false} />} />
           <Route path='/' element={<Home />} />
           <Route path='/search/:name' element={<Search />} />
           <Route path='/:category' element={<Category />} />
-          <Route path='/:category/:name' element={<Recipe account={account}/>} />
+          <Route path='/:category/:name' element={<Recipe />} />
           {
-            account === 'undefined' &&
+            userName === '' &&
             <>
-              <Route path='/signin' element={<Signin setAccount={setAccount} />} />
+              <Route path='/signin' element={<Signin />} />
               <Route path='/signup' element={<Signup />} />
               <Route path='/forgotpassword' element={<Forgotpassword />} />
             </>
           }
           {
-            account !== 'undefined' &&
+            userName !== '' &&
             <Route path='/newpassword' element={<Newpassword />} />
           }
-          
+
         </Routes>
       </Layout>
     </BrowserRouter>

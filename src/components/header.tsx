@@ -3,12 +3,13 @@ import { Dispatch, SetStateAction, useState, useEffect, useRef, KeyboardEvent } 
 import SearchImg from '../img/search2.png';
 import Headersearch from './headersearch';
 import Menu from './menu';
+import { useLogged } from './userProvider';
 
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
 
-export default function Header(props: { setNewsletterShown: Dispatcher<boolean>, isNewsletterShown: boolean, account: string, setAccount: Dispatcher<string> }) {
+export default function Header(props: { setNewsletterShown: Dispatcher<boolean>, isNewsletterShown: boolean }) {
 
   const [windowSize, setWindowSize] = useState(
     window.innerWidth
@@ -22,6 +23,7 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
   const hamburgerMenuFocus = useRef<HTMLLabelElement>(null);
   const [dropDownShow, setDropDownShow] = useState<boolean>(false);
   const navigate = useNavigate();
+  const {userName, setName} = useLogged()
 
 
   const newsletterShow = () => {
@@ -50,13 +52,13 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
       setShowSliderMenu(true);
     }
 
-    if (windowSize < 721 || props.account !== "undefined") {
+    if (windowSize < 721 || userName !== "") {
       setShowNewsLetter(false);
     }
     else {
       setShowNewsLetter(true);
     }
-  }, [windowSize, props.account]);
+  }, [windowSize, userName]);
 
 
   const keyDownDropMenu = (e: KeyboardEvent<HTMLElement>) => {
@@ -105,7 +107,7 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
       },
       credentials: 'include',
     });
-    props.setAccount('undefined');
+    setName('');
     navigate('/');
   };
 
@@ -134,16 +136,16 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
           <button className='search-show-button' onClick={handleClickShowSearch} onFocus={() => setDropDownShow(false)}>
             <img src={SearchImg} alt="search" />
           </button>
-          {props.account === 'undefined' &&
+          {userName === '' &&
             <nav className='signin-signup'>
               <Link to='/signin'>Sign in</Link>
               <Link to='/signup' className='signup'>Sign up</Link>
             </nav>
           }
 
-          {props.account !== 'undefined' &&
+          {userName !== '' &&
             <div className='dropdown' onMouseEnter={() => setDropDownShow(true)} onMouseLeave={() => setDropDownShow(false)}>
-              <button className='dropbtn' onKeyDown={keyDownDropMenu} >{props.account}</button>
+              <button className='dropbtn' onKeyDown={keyDownDropMenu} >{userName}</button>
               {dropDownShow &&
                 <section className='dropdown-content' >
                   <Link to='/newpassword' onClick={() => setDropDownShow(false)}>New password</Link>

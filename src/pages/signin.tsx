@@ -1,17 +1,19 @@
 import { SyntheticEvent, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormValueSignIn } from '../types/apitype';
+import { useLogged } from '../components/userProvider';
 
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
-export default function Signin(props:{setAccount: Dispatcher<string>}) {
+export default function Signin() {
   const [password1, setPassword1] = useState<string>('password');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [signInValue, setSignInValue ] = useState<FormValueSignIn>({email: '', password: ''});
   const [err, setErr] =useState<string[]>([]);
   const [errHasAccount, setErrHasAccount] = useState<string[]>([]);
   const navigate = useNavigate();
+  const {setName} = useLogged()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,7 +46,7 @@ export default function Signin(props:{setAccount: Dispatcher<string>}) {
         if(res.status === 'success'){
           setErr([]);
           setErrHasAccount([]);
-          props.setAccount(res.data);
+          setName(res.data);
           navigate('/');
         }
         else if (res.status === 'failed'){

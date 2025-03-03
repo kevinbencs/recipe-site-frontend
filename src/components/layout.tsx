@@ -4,16 +4,15 @@ import Footer from './footer';
 import Newsletter from './newsletter';
 import Cookie from './cookie';
 
-type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
-export default function Layout(props: {account:string ,children: JSX.Element, setAccount: Dispatcher<string> }) {
+export default function Layout(props: { children: JSX.Element }) {
 
   const [isNewsletterShown, setNewsletterShown] = useState(false);
   const [isCookyShown, setCookieShown] = useState(true);
 
   return (
     <>
-      <Header setNewsletterShown={setNewsletterShown} isNewsletterShown={isNewsletterShown} account={props.account} setAccount={props.setAccount}/>
+      <Header setNewsletterShown={setNewsletterShown} isNewsletterShown={isNewsletterShown} />
       {props.children}
       {isNewsletterShown && <Newsletter setNewsletterShown={setNewsletterShown} />}
       {isCookyShown && <Cookie setCookieShown={setCookieShown} />}

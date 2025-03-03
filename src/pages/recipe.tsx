@@ -6,6 +6,7 @@ import CommemtContainer from '../components/commemtcontainer';
 import { RecipeTypeHome, RecipeType, IngredientMeasure, } from '../types/apitype';
 import { v4 as uuidv4 } from 'uuid';
 import useSWR from 'swr';
+import { useLogged } from '../components/userProvider';
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
@@ -57,7 +58,7 @@ const fetcher = async (url: string): Promise<{ res: { rec: RecipeType, num: numb
 
 
 
-export default function Recipe(props: { account: string }) {
+export default function Recipe() {
   const [recipeItems, setRecipeItems] = useState<RecipeTypeHome[]>([]);
   const [ingredientsMeasures, setIngredientsMeasures] = useState<IngredientMeasure[]>([]);
   const [hideRecipeText, setHideRecipeText] = useState<string>('hide-text');
@@ -66,6 +67,7 @@ export default function Recipe(props: { account: string }) {
   const [err, setErr] = useState<string>('')
   const [readMore, setReadMore] = useState<boolean>(true);
   const mainRef = useRef<HTMLUListElement | null>(null);
+  const {userName} = useLogged()
 
   const { name } = useParams();
   const { category } = useParams();
@@ -174,7 +176,7 @@ export default function Recipe(props: { account: string }) {
               </div>
             </div>
 
-            <CommemtContainer recipeId={Number(data.res.rec.id)} hideComments={hideComments} account={props.account} />
+            <CommemtContainer recipeId={Number(data.res.rec.id)} hideComments={hideComments} account={userName} />
 
             {readMore && <div className='read-more' onClick={handleClick} tabIndex={0} onKeyDown={handleKeyDown}>
               Read more
