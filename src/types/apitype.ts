@@ -67,7 +67,7 @@ export interface comments {
     comment: string,
     canChange: string,
     name: string,
-    id: string
+    _id: string
 };
 
 export interface FormValue {

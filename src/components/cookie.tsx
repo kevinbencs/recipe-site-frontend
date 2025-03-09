@@ -1,18 +1,22 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
 export default function Cookie(props: { setCookieShown: Dispatcher<boolean> }) {
+  const Cookie = new Cookies(null, {path:'/'})
   const acceptClick = () => {
+    Cookie.set('popUp',true)
     props.setCookieShown(false);
   };
   const rejectClick = () => {
+    Cookie.set('popUp',false)
     props.setCookieShown(false);
   };
 
   return (
-    <div className="cookie-shadow">
+    <div className="cookie-shadow" id="cookie-banner">
       <div className="cookie-container">
         <section className='cookie-text-container'>
           <h2>We Care About Your Privacy</h2>

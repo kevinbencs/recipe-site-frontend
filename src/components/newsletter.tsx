@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction, SyntheticEvent, KeyboardEvent, useState } from 'react';
+import { useTransition } from 'react';
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
-interface Newsletter{
+interface Newsletter {
   name: string,
   email: string,
   meat: boolean,
@@ -26,6 +27,7 @@ export default function Newsletter(props: { setNewsletterShown: Dispatcher<boole
   const [err, setErr] = useState<msg[]>([]);
   const [errHasAccount, setErrHasAccount] = useState<string>('');
   const [submitOk, setSubmitOk] = useState<string>('');
+  const [isPending, startTransition] = useTransition()
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,38 +40,44 @@ export default function Newsletter(props: { setNewsletterShown: Dispatcher<boole
     }
   };
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    await fetch('/newsletter',{
-      method: "POST",
-      headers:{
-        "Accept": "application/json, text/plain",
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify(inputValue)
-    })
-    .then(data => data.json())
-    .then(res => {
-      if (res.status === 'success') {
-        setErr([]);
-        setErrHasAccount('');
-        setSubmitOk(res.message);
-        setInputValue({
-          name: '', email: '', meat: false, vegetarian: false, pasta: false, side: false, dessert: false, seafood: false
+    startTransition(() => {
+      fetch('/newsletter', {
+        method: "POST",
+        headers: {
+          "Accept": "application/json, text/plain",
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify(inputValue)
+      })
+        .then(data => data.json())
+        .then(res => {
+          if (res.status === 'success') {
+            setErr([]);
+            setErrHasAccount('');
+            setSubmitOk(res.message);
+            setInputValue({
+              name: '', email: '', meat: false, vegetarian: false, pasta: false, side: false, dessert: false, seafood: false
+            });
+
+          }
+          else if (res.status === 'failed') {
+            setErrHasAccount(res.message);
+            setErr([]);
+            setSubmitOk('');
+          }
+          else if (res.status !== 'error') {
+            setErr(res.errors.errors);
+            setErrHasAccount('');
+            setSubmitOk('');
+          }
+        })
+        .catch((err) => {
+          console.error(err)
         });
-        
-      }
-      else if (res.status === 'failed') {
-        setErrHasAccount(res.message);
-        setErr([]);
-        setSubmitOk('');
-      }
-      else if (res.status !== 'error') {
-        setErr(res.errors.errors);
-        setErrHasAccount('');
-        setSubmitOk('');
-      }
-    });
+    })
+
   }
 
   const newsletterClose = (): void => {
@@ -113,41 +121,41 @@ export default function Newsletter(props: { setNewsletterShown: Dispatcher<boole
         }
         <form action="#" method='Post' onSubmit={handleSubmit}>
           <label htmlFor="name1">Name</label>
-          <input type="text" name="name" placeholder="name" id='name1' required onChange={handleInputChange} value={inputValue.name}/>
+          <input type="text" name="name" disabled={isPending} placeholder="name" id='name1' required onChange={handleInputChange} value={inputValue.name} />
           <label htmlFor="email">Email</label>
-          <input type="email" name="email" placeholder="email" id='email' required onChange={handleInputChange} value={inputValue.email}/>
+          <input type="email" name="email" disabled={isPending} placeholder="email" id='email' required onChange={handleInputChange} value={inputValue.email} />
           <section className='checkbox-container'>
             <h3>Newsletter Subscriptions</h3>
             <div className='checkbox-list'>
               <div>
-                <input type="checkbox" name="meat" id='meat' onChange={handleInputChange} checked={inputValue.meat}/>
+                <input type="checkbox" name="meat" disabled={isPending} id='meat' onChange={handleInputChange} checked={inputValue.meat} />
                 <label htmlFor="meat">Meat</label>
               </div>
               <div>
-                <input type="checkbox" name="vegetarian" id='vegetarian' onChange={handleInputChange} checked={inputValue.vegetarian}/>
+                <input type="checkbox" name="vegetarian" disabled={isPending} id='vegetarian' onChange={handleInputChange} checked={inputValue.vegetarian} />
                 <label htmlFor="vegetarian">Vegetarian</label>
               </div>
               <div>
-                <input type="checkbox" name="dessert" id='dessert' onChange={handleInputChange}  checked={inputValue.dessert}/>
+                <input type="checkbox" name="dessert" disabled={isPending} id='dessert' onChange={handleInputChange} checked={inputValue.dessert} />
                 <label htmlFor="dessert">Dessert</label>
               </div>
               <div>
-                <input type="checkbox" name="pasta" id='pasta' onChange={handleInputChange} checked={inputValue.pasta}/>
+                <input type="checkbox" name="pasta" disabled={isPending} id='pasta' onChange={handleInputChange} checked={inputValue.pasta} />
                 <label htmlFor="pasta">Pasta</label>
               </div>
               <div>
-                <input type="checkbox" name="seafood" id='seafood' onChange={handleInputChange} checked={inputValue.seafood}/>
+                <input type="checkbox" name="seafood" disabled={isPending} id='seafood' onChange={handleInputChange} checked={inputValue.seafood} />
                 <label htmlFor="seafood">Seafood</label>
               </div>
               <div>
-                <input type="checkbox" name="side" id='side' onChange={handleInputChange} checked={inputValue.side}/>
+                <input type="checkbox" name="side" disabled={isPending} id='side' onChange={handleInputChange} checked={inputValue.side} />
                 <label htmlFor="side">Side</label>
               </div>
             </div>
 
           </section>
 
-          <input type="submit" value="SIGN UP" className='submit-button' />
+          <input type="submit" value="SIGN UP" disabled={isPending} className='submit-button' />
         </form>
       </div>
     </div>

@@ -24,7 +24,7 @@ const fetcher = async (url: string): Promise<{ name: string }> => {
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [userName, setName] = useState<string>('');
 
-    const { data, error, isLoading } = useSWR('/getaccount', fetcher)
+    const { data, error, isLoading } = useSWR('/getaccount', fetcher, {revalidateOnFocus: false})
 
     useEffect(() => {
         if (data) {

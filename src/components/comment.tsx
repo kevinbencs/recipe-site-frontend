@@ -1,8 +1,10 @@
-import { Dispatch, SetStateAction, SyntheticEvent, useEffect, useRef, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import { KeyedMutator } from "swr";
+import { comments } from "../types/apitype";
 
-type Dispatcher<S> = Dispatch<SetStateAction<S>>
 
-export default function CommentShow(props: {recipeId: number ,comment: string, canChange: string, name: string, id: string, setDeleteComment: Dispatcher<string>, setEditComment: Dispatcher<string> }) {
+
+export default function CommentShow(props: { recipeId: number, data: comments[] | undefined, comment: string, canChange: string, name: string, id: string, mutate: KeyedMutator<comments[]> }) {
   const [edit, setEdit] = useState<boolean>(false);
   const [comment, setComment] = useState<string>(props.comment);
   const commentRef = useRef<HTMLParagraphElement>(null);
@@ -23,14 +25,25 @@ export default function CommentShow(props: {recipeId: number ,comment: string, c
   }
 
   const handleDelete = async () => {
-    await fetch(`/deletecomment/:${props.recipeId}`, {
-      method: "DELETE",
-      headers: {
-        "Accept": "application/json, text/plain",
-        "Content-type": "application/json"
+    try {
+      props.mutate([...props!.data!.filter(item => item._id !== props.id)], false)
+      const res = await fetch(`/deletecomment/${props.id}`, {
+        method: "DELETE",
+        headers: {
+          "Accept": "application/json, text/plain",
+          "Content-type": "application/json"
+        }
+      });
+
+      if (res.status !== 204) {
+        const resJson = await res.json();
+        if (resJson.error) console.error(resJson.error);
+        props.mutate()
       }
-    });
-    props.setDeleteComment(props.id);
+    } catch (error) {
+      console.error(error)
+    }
+
   }
 
   useEffect(() => {
@@ -44,17 +57,29 @@ export default function CommentShow(props: {recipeId: number ,comment: string, c
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await fetch(`/updatecomment/:${props.recipeId}`, {
-      method: "PATCH",
-      headers: {
-        "Accept": "application/json, text/plain",
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify({ comment: comment })
-    });
-    setEdit(false);
-    setShowDelete(true);
-    props.setEditComment(props.id);
+    try {
+      setEdit(false);
+      setShowDelete(true);
+      props.mutate([...props.data!.map((item) => item._id === props.id ? { _id: props.id, canChange: 'true', name: item.name, comment: comment } : { _id: props.id, canChange: 'true', name: item.name, comment: item.comment })])
+      const res = await fetch(`/updatecomment/${props.id}`, {
+        method: "PATCH",
+        headers: {
+          "Accept": "application/json, text/plain",
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({ comment: comment })
+      });
+
+      if (res.status !== 204) {
+        const resJson = await res.json();
+        if (resJson.error) console.error(resJson.error);
+
+        props.mutate()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
   };
 
   const handleComment = (e: React.ChangeEvent<HTMLParagraphElement>) => {

@@ -6,7 +6,7 @@ import CommemtContainer from '../components/commemtcontainer';
 import { RecipeTypeHome, RecipeType, IngredientMeasure, } from '../types/apitype';
 import { v4 as uuidv4 } from 'uuid';
 import useSWR from 'swr';
-import { useLogged } from '../components/userProvider';
+import { Helmet } from 'react-helmet-async';
 
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
@@ -67,13 +67,12 @@ export default function Recipe() {
   const [err, setErr] = useState<string>('')
   const [readMore, setReadMore] = useState<boolean>(true);
   const mainRef = useRef<HTMLUListElement | null>(null);
-  const {userName} = useLogged()
 
   const { name } = useParams();
   const { category } = useParams();
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useSWR(`/api/title/${name}`, fetcher)
+  const { data, error, isLoading } = useSWR(`/api/title/${name}`, fetcher, {revalidateOnFocus: false})
 
   if (!error && !isLoading && (data === undefined || data.failed !== undefined)) navigate('/');
 
@@ -137,69 +136,87 @@ export default function Recipe() {
 
 
   return (
-    <main ref={mainRef}>
-      {error && <div>{error}</div>}
-      {isLoading && <div className='loading-content'>...Loading</div>}
-      {(data !== undefined && data.res !== undefined) &&
-        <div className='recipe-discription'>
-          <div className='recipe-header' style={{ backgroundImage: `url(${data.res.rec.strMealThumb})` }}>
-            {
-              data.res !== undefined &&
-              <h1>
-                {data.res.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res.rec.strMeal.length)}
-              </h1>
-            }
-          </div>
-
-          <div className='recipe-main '>
-            <div className={`recipe-video-text ${hideRecipeText}`}>
-              {data.res.rec.strYoutube !== '' &&
-                <iframe src={data.res.rec.strYoutube} width="560" height="315" frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin" allowFullScreen title={data.res.rec.strMeal}>
-                </iframe>}
-              <p>
-                {data.res.rec.strInstructions.replaceAll('\r\n\r\n', ' \n ')}
-              </p>
+    <>
+      <Helmet>
+        <title>{(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''}</title>
+        <meta property="og:title" content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <meta name="description" content={data?.res?.rec.strInstructions.slice(0, 80)} />
+        <meta name='keywords' content={category?.charAt(0).toUpperCase() + category!.slice(1)} />
+        <meta property="og:description" content={data?.res?.rec.strInstructions.slice(0, 80)} />
+        <meta property='og:image' content={data?.res?.rec.strMealThumb} />
+        <meta property='og:image:alt' content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <meta name="twitter:creator" content='Admin' />
+        <meta name="twitter:title" content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <meta name="twitter:description" content={data?.res?.rec.strInstructions.slice(0, 80)} />
+        <meta name='twitter:image' content={data?.res?.rec.strMealThumb} />
+        <meta name='twitter:image:alt' content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <meta name="robots" content="index, follow, imageindex"></meta>
+        <meta name="googlebot" content="index, follow, imageindex, max-video-preview:0, max-image-preview:large"></meta>
+      </Helmet>
+      <main ref={mainRef}>
+        {error && <div>{error}</div>}
+        {isLoading && <div className='loading-content'>...Loading</div>}
+        {(data !== undefined && data.res !== undefined) &&
+          <div className='recipe-discription'>
+            <div className='recipe-header' style={{ backgroundImage: `url(${data.res.rec.strMealThumb})` }}>
+              {
+                data.res !== undefined &&
+                <h1>
+                  {data.res.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res.rec.strMeal.length)}
+                </h1>
+              }
             </div>
 
-            <div className={`recipe-ingredients-container ${hideRecipeIngredients}`}>
-              <div className="recipe-ingredients">
-                <div className='decoration'></div>
-                <div className='decoration'></div>
-                <ul>
-                  {ingredientsMeasures.length > 0 && ingredientsMeasures.map(r => <RecipeDiscription strIngredient={r.strIngredient} strMeasure={r.strMeasure} key={uuidv4()} />)}
-                </ul>
-
-                <div className='decoration'></div>
-                <div className='decoration'></div>
+            <div className='recipe-main '>
+              <div className={`recipe-video-text ${hideRecipeText}`}>
+                {data.res.rec.strYoutube !== '' &&
+                  <iframe src={data.res.rec.strYoutube} width="560" height="315" frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin" allowFullScreen title={data.res.rec.strMeal}>
+                  </iframe>}
+                <p>
+                  {data.res.rec.strInstructions.replaceAll('\r\n\r\n', ' \n ')}
+                </p>
               </div>
+
+              <div className={`recipe-ingredients-container ${hideRecipeIngredients}`}>
+                <div className="recipe-ingredients">
+                  <div className='decoration'></div>
+                  <div className='decoration'></div>
+                  <ul>
+                    {ingredientsMeasures.length > 0 && ingredientsMeasures.map(r => <RecipeDiscription strIngredient={r.strIngredient} strMeasure={r.strMeasure} key={uuidv4()} />)}
+                  </ul>
+
+                  <div className='decoration'></div>
+                  <div className='decoration'></div>
+                </div>
+              </div>
+
+              <CommemtContainer recipeId={Number(data.res.rec.id)} hideComments={hideComments} />
+
+              {readMore && <div className='read-more' onClick={handleClick} tabIndex={0} onKeyDown={handleKeyDown}>
+                Read more
+              </div>}
             </div>
+          </div>}
 
-            <CommemtContainer recipeId={Number(data.res.rec.id)} hideComments={hideComments} account={userName} />
-
-            {readMore && <div className='read-more' onClick={handleClick} tabIndex={0} onKeyDown={handleKeyDown}>
-              Read more
-            </div>}
-          </div>
-        </div>}
-
-      {recipeItems !== null &&
-        <section className='another-recipes'>
-          <h2>You’ll Also Love</h2>
-          <div id="recipes-container">{recipeItems?.map(meal => <Recipeitem
-            strMeal={meal.strMeal}
-            strMealThumb={meal.strMealThumb}
-            strCategory={category!.replaceAll('-', ' ')}
-            strInstructions={meal.strInstructions}
-            key={uuidv4()} />)}
-          </div>
-        </section>
-      }
-      {err !== '' &&
-        <div>{err}</div>
-      }
-      {(data && data.res && data.res.num > recipeItems.length) && <div className='loading-content'>Loading ...</div>}
-    </main>
+        {recipeItems !== null &&
+          <section className='another-recipes'>
+            <h2>You’ll Also Love</h2>
+            <div id="recipes-container">{recipeItems?.map(meal => <Recipeitem
+              strMeal={meal.strMeal}
+              strMealThumb={meal.strMealThumb}
+              strCategory={category!.replaceAll('-', ' ')}
+              strInstructions={meal.strInstructions}
+              key={uuidv4()} />)}
+            </div>
+          </section>
+        }
+        {err !== '' &&
+          <div>{err}</div>
+        }
+        {(data && data.res && data.res.num > recipeItems.length) && <div className='loading-content'>Loading ...</div>}
+      </main>
+    </>
   )
 }

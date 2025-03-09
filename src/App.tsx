@@ -10,6 +10,7 @@ import Newpassword from './pages/newpassword';
 import Forgotpassword from './pages/forgotpassword';
 import ScrollTop from './components/scrolltop';
 import { useLogged } from './components/userProvider';
+import { HelmetProvider } from 'react-helmet-async';
 
 
 function App() {
@@ -17,29 +18,31 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ScrollTop />
-      <Layout>
-        <Routes>
-          <Route path='*' element={<Navigate to='/' replace={false} />} />
-          <Route path='/' element={<Home />} />
-          <Route path='/search/:name' element={<Search />} />
-          <Route path='/:category' element={<Category />} />
-          <Route path='/:category/:name' element={<Recipe />} />
-          {
-            userName === '' &&
-            <>
-              <Route path='/signin' element={<Signin />} />
-              <Route path='/signup' element={<Signup />} />
-              <Route path='/forgotpassword' element={<Forgotpassword />} />
-            </>
-          }
-          {
-            userName !== '' &&
-            <Route path='/newpassword' element={<Newpassword />} />
-          }
+      <HelmetProvider>
+        <ScrollTop />
+        <Layout>
+          <Routes>
+            <Route path='*' element={<Navigate to='/' replace={false} />} />
+            <Route path='/' element={<Home />} />
+            <Route path='/search/:name' element={<Search />} />
+            <Route path='/:category' element={<Category />} />
+            <Route path='/:category/:name' element={<Recipe />} />
+            {
+              userName === '' &&
+              <>
+                <Route path='/signin' element={<Signin />} />
+                <Route path='/signup' element={<Signup />} />
+                <Route path='/forgotpassword' element={<Forgotpassword />} />
+              </>
+            }
+            {
+              userName !== '' &&
+              <Route path='/newpassword' element={<Newpassword />} />
+            }
 
-        </Routes>
-      </Layout>
+          </Routes>
+        </Layout>
+      </HelmetProvider>
     </BrowserRouter>
   );
 }
