@@ -8,6 +8,9 @@ export default function Forgotpassword() {
   const [isPending, startTransition] = useTransition()
   const [email, setEmail] = useState<string>('')
   const [message, setMessage] = useState<string>('')
+  const [err, setErr] = useState<string>('')
+  const [errHasAccount, setErrHasAccount] = useState<string[]>([]);
+
   const handleSzbmit = (e: SyntheticEvent) => {
     e.preventDefault();
     startTransition(() => {
@@ -22,8 +25,9 @@ export default function Forgotpassword() {
       })
       .then(data => data.json())
       .then(res => {
-        if(res.success) setMessage(res.success);
-        if(res.error) setMessage(res.error);
+        if(res.failed) setErrHasAccount(res.failed);
+        else if(res.success) setMessage(res.success);
+        else if(res.error) setErr(res.error);
       })
       .catch(err => {
         console.error(err);
@@ -52,7 +56,7 @@ export default function Forgotpassword() {
       <main className='sign-container'>
         <div className='form-container'>
           <h1>Password assistance</h1>
-          <div className='submit-ok'>{message}</div>
+          
           <p>
             Enter the email address associated with your account.
           </p>
@@ -62,6 +66,16 @@ export default function Forgotpassword() {
             </label>
             <input type="submit" disabled={isPending} value="Send" className='submit' tabIndex={0} />
           </form>
+          <div className='submit-ok'>{message}</div>
+          {err !== '' &&
+            <div className='error'>{err}</div>
+          }
+
+          {errHasAccount.length !== 0 &&
+            <div className='error'>
+              {errHasAccount.map((mes: string) => <div>{mes}</div>)}
+            </div>
+          }
         </div>
       </main>
     </>

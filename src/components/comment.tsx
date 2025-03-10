@@ -60,7 +60,8 @@ export default function CommentShow(props: { recipeId: number, data: comments[] 
     try {
       setEdit(false);
       setShowDelete(true);
-      props.mutate([...props.data!.map((item) => item._id === props.id ? { _id: props.id, canChange: 'true', name: item.name, comment: comment } : { _id: props.id, canChange: 'true', name: item.name, comment: item.comment })])
+      const arr = [...props.data!.map((item) => item._id === props.id ? { _id: props.id, canChange: 'true', name: item.name, comment: comment } : { _id: props.id, canChange: 'true', name: item.name, comment: item.comment } )];
+      props.mutate(arr, false)
       const res = await fetch(`/updatecomment/${props.id}`, {
         method: "PATCH",
         headers: {

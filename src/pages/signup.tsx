@@ -11,7 +11,7 @@ export default function Signup() {
   const [signUpValue, setSignUpValue] = useState<FormValue>({
     name: '', email: '', password: '', password2: '', newsletter: false, term: false
   });
-  const [err, setErr] = useState<string[]>([]);
+  const [err, setErr] = useState<string>('');
   const [errHasAccount, setErrHasAccount] = useState<string[]>([]);
   const [submitOk, setSubmitOk] = useState<string>('');
   const [isPending, startTransition] = useTransition()
@@ -50,20 +50,20 @@ export default function Signup() {
       })
         .then(data => data.json())
         .then(res => {
-          if (res.status === 'success') {
+          if (res.success) {
             setSignUpValue({ name: '', email: '', password: '', password2: '', newsletter: false, term: false });
-            setErr([]);
+            setErr('');
             setErrHasAccount([]);
-            setSubmitOk(res.message);
+            setSubmitOk(res.success);
 
           }
-          else if (res.status === 'failed') {
-            setErrHasAccount(res.message);
-            setErr([]);
+          else if (res.failed) {
+            setErrHasAccount(res.failed);
+            setErr('');
             setSubmitOk('');
           }
-          else if (res.status !== 'error') {
-            setErr(res.errors.errors);
+          else if (res.error) {
+            setErr(res.error);
             setErrHasAccount([]);
             setSubmitOk('');
           }
@@ -101,8 +101,8 @@ export default function Signup() {
         <div className='form-container'>
 
           <h1>Sign up</h1>
-          {err.length !== 0 &&
-            <div className='error'>{err.map((r: string) => <div>{r}</div>)}</div>
+          {err !== '' &&
+            <div className='error'>{err}</div>
           }
 
           {errHasAccount.length !== 0 &&

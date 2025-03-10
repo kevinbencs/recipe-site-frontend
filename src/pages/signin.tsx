@@ -10,7 +10,7 @@ export default function Signin() {
   const [password1, setPassword1] = useState<string>('password');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [signInValue, setSignInValue] = useState<FormValueSignIn>({ email: '', password: '' });
-  const [err, setErr] = useState<string[]>([]);
+  const [err, setErr] = useState<string>();
   const [errHasAccount, setErrHasAccount] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition()
   const navigate = useNavigate();
@@ -45,18 +45,18 @@ export default function Signin() {
       })
         .then(data => data.json())
         .then(res => {
-          if (res.status === 'success') {
-            setErr([]);
+          if (res.success) {
+            setErr('');
             setErrHasAccount([]);
-            setName(res.data);
+            setName(res.success);
             navigate('/');
           }
-          else if (res.status === 'failed') {
-            setErrHasAccount(res.message);
-            setErr([]);
+          else if (res.failed) {
+            setErrHasAccount(res.failed);
+            setErr('');
           }
-          else if (res.status !== 'error') {
-            setErr(res.errors.errors);
+          else if (res.error) {
+            setErr(res.error);
             setErrHasAccount([]);
           }
         })
@@ -87,9 +87,9 @@ export default function Signin() {
       </Helmet>
       <main className='sign-container'>
         <div className='form-container'>
-          <h2>Sign in</h2>
-          {err.length !== 0 &&
-            <div className='error'>{err.map((mes: string) => <div>{mes}</div>)}</div>
+          <h1>Sign in</h1>
+          {err !== '' &&
+            <div className='error'>{err}</div>
           }
 
           {errHasAccount.length !== 0 &&

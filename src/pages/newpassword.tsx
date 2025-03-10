@@ -7,16 +7,12 @@ interface FormValue {
   password2: string
 };
 
-interface msg {
-  msg: string,
-
-}
 
 export default function Newpassword() {
   const [password1, setPassword1] = useState<string>('password');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<FormValue>({ password: '', password2: '' });
-  const [err, setErr] = useState<msg[]>([]);
+  const [err, setErr] = useState<string>();
   const [errHasAccount, setErrHasAccount] = useState<string>('');
   const [passwordCahnged, setPasswordChanged] = useState<string>('');
   const [isPending, startTransition] = useTransition()
@@ -50,19 +46,19 @@ export default function Newpassword() {
       })
         .then(data => data.json())
         .then(res => {
-          if (res.status === 'success') {
-            setErr([]);
+          if (res.success) {
+            setErr('');
             setErrHasAccount('');
             setInputValue({ password: '', password2: '' });
-            setPasswordChanged(res.message);
+            setPasswordChanged(res.success);
           }
-          else if (res.status === 'failed') {
-            setErrHasAccount(res.message);
-            setErr([]);
+          else if (res.failed) {
+            setErrHasAccount(res.failed);
+            setErr('');
             setPasswordChanged('');
           }
-          else if (res.status !== 'error') {
-            setErr(res.errors.errors);
+          else if (res.error) {
+            setErr(res.error);
             setErrHasAccount('');
             setPasswordChanged('');
           }
@@ -96,8 +92,8 @@ export default function Newpassword() {
     <main className='sign-container'>
       <div className='form-container'>
         <h1>New password</h1>
-        {err.length !== 0 &&
-          <div className='error'>{err.map((r: msg) => <div>{r.msg}</div>)}</div>
+        {err !== '' &&
+          <div className='error'>{err}</div>
         }
 
         {errHasAccount !== '' &&
