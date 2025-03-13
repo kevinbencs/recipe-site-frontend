@@ -126,7 +126,7 @@ export default function Search() {
             {(data !== undefined && (data.res?.rec.length + recipeItems.length < data.res?.num)) &&
               <div className='loading-content'>...Loading</div>
             }
-            {(data === undefined || data.res.num === 0) &&
+            {((data === undefined || data.res.num === 0) && !isLoading) &&
               <div>Sorry, there is no {name?.replaceAll('-', ' ')} recipe.</div>
             }
           </div>
