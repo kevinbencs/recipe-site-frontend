@@ -65,6 +65,7 @@ export default function Newpassword() {
         })
         .catch(err => {
           console.error(err)
+          setErr('Something went wrong. Please try again')
         })
     })
 

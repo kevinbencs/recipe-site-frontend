@@ -79,6 +79,7 @@ export default function CommentShow(props: { recipeId: number, data: comments[] 
       }
     } catch (error) {
       console.error(error)
+      props.mutate()
     }
 
   };

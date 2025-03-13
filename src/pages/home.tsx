@@ -10,21 +10,27 @@ import { Helmet } from 'react-helmet-async';
 
 
 const fetcher = async (url: string): Promise<{ res: RecipeTypeHome[] }> => {
-  const res = await fetch('/homePage');
+  try {
+    const res = await fetch('/homePage');
 
-  if (!res.ok) {
-    const error = new Error();
-    error.cause = await res.json().then((data: { error: string }) => data.error)
-    console.error(error.cause)
-    throw error
+    if (!res.ok) {
+      const errorMessage = await res.json().then(data => data.error || "unknown error");
+      console.error(errorMessage)
+
+      throw new Error(errorMessage);
+    }
+
+    return res.json()
+  } catch (error) {
+    console.error(error)
+    throw new Error('Server error');
   }
 
-  return res.json()
 }
 
 export default function Home() {
   const navigate = useNavigate()
-  const { data, error, isLoading } = useSWR('/homePage', fetcher, {revalidateOnFocus: false})
+  const { data, error, isLoading } = useSWR('/homePage', fetcher, { revalidateOnFocus: false })
 
 
   //search
@@ -47,7 +53,7 @@ export default function Home() {
     <>
       <Helmet>
         <title>Recipes</title>
-        <link rel='preload' href={'/homePage'} as='fetch' />
+        <link rel='preload' href={'/homePage'} as='fetch' crossOrigin='anonymous' />
         <meta property="og:title" content="Recipes" />
         <meta name="description" content='Recipe page' />
         <meta name='keywords' content='recipe' />
@@ -81,7 +87,7 @@ export default function Home() {
         <article>
           <h1 className="recipes-container-header">Recipes</h1>
           <div id="recipes-container">
-            {error && <div>{error}</div>}
+            {error && <div>{error.message}</div>}
             {isLoading && <div>...Loading</div>}
             {data !== undefined && data.res?.map(recipe => <Recipeitem
               strMeal={recipe.strMeal}

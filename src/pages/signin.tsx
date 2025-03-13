@@ -62,6 +62,7 @@ export default function Signin() {
         })
         .catch((err) => {
           console.error(err)
+          setErr('Something went wrong. Please try again')
         });
     })
 

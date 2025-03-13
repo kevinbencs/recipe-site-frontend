@@ -7,16 +7,22 @@ import { RecipeTypeHome } from "../types/apitype";
 import { Helmet } from 'react-helmet-async';
 
 export const fetcher = async (url: string): Promise<{ res: { rec: RecipeTypeHome[], num: number } }> => {
-  const res = await fetch(`${url}`);
+  try {
+    const res = await fetch(`${url}`);
 
-  if (!res.ok) {
-    const error = new Error();
-    error.cause = await res.json().then((data: { error: string }) => data.error)
-    console.error(error.cause)
-    throw error
+    if (!res.ok) {
+      const errorMessage = await res.json().then(data => data.error || "unknown error");
+      console.error(errorMessage)
+
+      throw new Error(errorMessage);
+    }
+
+    return res.json()
+  } catch (error) {
+    console.error(error)
+    throw new Error('Server error');
   }
 
-  return res.json()
 }
 
 
@@ -28,7 +34,7 @@ export default function Category() {
   const mainRef = useRef<HTMLUListElement | null>(null);
   const [err, setErr] = useState<string>('')
 
-  const { data, error, isLoading } = useSWR(`/api/category/${category?.replaceAll('_', ' ')}`, fetcher, {revalidateOnFocus: false})
+  const { data, error, isLoading } = useSWR(`/api/category/${category?.replaceAll('_', ' ')}`, fetcher, { revalidateOnFocus: false })
 
   if (!error && !isLoading && (data === undefined || data.res.num <= 0)) navigate('/');
 
@@ -97,7 +103,7 @@ export default function Category() {
         <article>
           <h2 className="recipes-container-header">Recipes</h2>
           <div id="recipes-container">
-            {error && <div>{error}</div>}
+            {error && <div>{error.message}</div>}
             {isLoading && <div className='loading-content'>...Loading</div>}
             {data !== undefined &&
               data.res?.rec.map(recipe => <Recipeitem

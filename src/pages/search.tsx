@@ -7,16 +7,22 @@ import useSWR from 'swr'
 import { Helmet } from 'react-helmet-async';
 
 export const fetcher = async (url: string): Promise<{ res: { rec: RecipeTypeHome[], num: number } }> => {
-  const res = await fetch(`${url}`);
+  try {
+    const res = await fetch(`${url}`);
 
-  if (!res.ok) {
-    const error = new Error();
-    error.cause = await res.json().then((data: { error: string }) => data.error)
-    console.error(error.cause)
-    throw error
+    if (!res.ok) {
+      const errorMessage = await res.json().then(data => data.error || "unknown error");
+      console.error(errorMessage)
+
+      throw new Error(errorMessage);
+    }
+
+    return res.json()
+  } catch (error) {
+    console.error(error)
+    throw new Error('Server error');
   }
 
-  return res.json()
 }
 
 
@@ -105,7 +111,7 @@ export default function Search() {
         <article>
           <h1 className="recipes-container-header">{name?.replaceAll('-', ' ')}</h1>
           <div id="recipes-container">
-            {error && <div>{error}</div>}
+            {error && <div>{error.message}</div>}
             {isLoading && <div className='loading-content'>...Loading</div>}
             {data !== undefined &&
               data.res.rec.map((meal: RecipeTypeHome) => <Recipeitem

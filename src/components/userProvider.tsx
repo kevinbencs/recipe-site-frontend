@@ -17,11 +17,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         fetch('/getaccount')
         .then(data =>data.json())
         .then(res => {
-            setName(res.name)
+            if(res.name) setName(res.name)
             setLoading(false)
         })
         .catch(err => {
             console.error(err)
+            setLoading(false)
         })
 
     }, [])

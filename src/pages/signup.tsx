@@ -71,6 +71,7 @@ export default function Signup() {
         )
         .catch((error) => {
           console.error(error)
+          setErr('Something went wrong. Please try again')
         })
     })
 

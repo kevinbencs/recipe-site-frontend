@@ -1,4 +1,4 @@
-import {useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import CommentShow from './comment';
 import { SyntheticEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,17 +7,21 @@ import useSWR from 'swr';
 import { useLogged } from './userProvider';
 
 const fetcher = async (url: string): Promise<comments[]> => {
-  const res = await fetch(url)
+  try {
+    const res = await fetch(url)
+    if (!res.ok) {
+      const errorMessage = await res.json().then(data => data.error || "unknown error");
+      console.error(errorMessage)
 
-  if (!res.ok) {
-    const error = new Error();
-    error.cause = await res.json().then(data => data.error);
-    console.error(error.cause)
+      throw new Error(errorMessage);
+    }
 
-    throw error;
+    return await res.json()
+  } catch (error) {
+    console.error(error)
+    throw new Error('Server error');
   }
 
-  return await res.json()
 }
 
 
@@ -26,13 +30,14 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
   const commentValue = useRef<HTMLParagraphElement>(null);
   const { userName } = useLogged()
 
-  const { data, error, isLoading, mutate } = useSWR(`/api/comments/${props.recipeId}`, fetcher)
+  const { data, error, isLoading, mutate } = useSWR(`/api/comments/${props.recipeId}`, fetcher, { revalidateOnFocus: false })
 
   const sendComment = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (Comment !== '') {
       try {
-        if (data) mutate([...data, { name: userName, comment: Comment, _id: uuidv4(), canChange: 'true' }],false)
+        const newComment = { name: userName, comment: Comment, _id: uuidv4(), canChange: 'true' }
+        if (data) mutate([...data, newComment], false)
         const res = await fetch(`/sendcomment/${props.recipeId}`, {
           method: "POST",
           headers: {
@@ -42,6 +47,10 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
           body: JSON.stringify({ comment: Comment })
         });
 
+        if (!res.ok) {
+          throw new Error("Failed to post comment");
+        }
+
         if (res.status !== 204) {
           const resJson = await res.json();
           if (resJson.error) console.error(resJson.error);
@@ -49,6 +58,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
         mutate()
       } catch (error) {
         console.error(error)
+        mutate()
       }
 
     }
@@ -71,7 +81,7 @@ export default function CommemtContainer(props: { recipeId: number, hideComments
       </form>}
 
       <div className='comment-container-container'>
-        {error && <div>{error}</div>}
+        {error && <div>{error.message}</div>}
         {isLoading && <div className='loading-content'>...Loading</div>}
         {(data !== undefined && data.length !== 0) &&
           data.map((comment: comments) => <CommentShow recipeId={props.recipeId} comment={comment.comment}

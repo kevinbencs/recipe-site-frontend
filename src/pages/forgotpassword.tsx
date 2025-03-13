@@ -31,6 +31,7 @@ export default function Forgotpassword() {
       })
       .catch(err => {
         console.error(err);
+        setErr('Something went wrong. Please try again')
       })
     })
   };

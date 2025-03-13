@@ -42,16 +42,22 @@ const getIngredientsMeasures = (result: RecipeType, setIngredientsMeasures: Disp
 
 
 const fetcher = async (url: string): Promise<{ res: { rec: RecipeType, num: number } | undefined, failed: string | undefined }> => {
-  const res = await fetch(`${url}`);
+  try {
+    const res = await fetch(`${url}`);
 
-  if (!res.ok) {
-    const error = new Error();
-    error.cause = await res.json().then((data: { error: string }) => data.error)
-    console.error(error.cause)
-    throw error
+    if (!res.ok) {
+      const errorMessage = await res.json().then(data => data.error || "unknown error");
+      console.error(errorMessage)
+
+      throw new Error(errorMessage);
+    }
+
+    return res.json()
+  } catch (error) {
+    console.error(error)
+    throw new Error('Server error');
   }
 
-  return res.json()
 }
 
 
@@ -72,7 +78,7 @@ export default function Recipe() {
   const { category } = useParams();
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useSWR(`/api/title/${name}`, fetcher, {revalidateOnFocus: false})
+  const { data, error, isLoading } = useSWR(`/api/title/${name}`, fetcher, { revalidateOnFocus: false })
 
   if (!error && !isLoading && (data === undefined || data.failed !== undefined)) navigate('/');
 
@@ -138,23 +144,23 @@ export default function Recipe() {
   return (
     <>
       <Helmet>
-        <title>{(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''}</title>
-        <meta property="og:title" content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <title>{(data !== undefined && data.res !== undefined) ? data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''}</title>
+        <meta property="og:title" content={(data !== undefined && data.res !== undefined) ? data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
         <meta name="description" content={data?.res?.rec.strInstructions.slice(0, 80)} />
         <meta name='keywords' content={category?.charAt(0).toUpperCase() + category!.slice(1)} />
         <meta property="og:description" content={data?.res?.rec.strInstructions.slice(0, 80)} />
         <meta property='og:image' content={data?.res?.rec.strMealThumb} />
-        <meta property='og:image:alt' content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <meta property='og:image:alt' content={(data !== undefined && data.res !== undefined) ? data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
         <meta name="twitter:creator" content='Admin' />
-        <meta name="twitter:title" content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <meta name="twitter:title" content={(data !== undefined && data.res !== undefined) ? data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
         <meta name="twitter:description" content={data?.res?.rec.strInstructions.slice(0, 80)} />
         <meta name='twitter:image' content={data?.res?.rec.strMealThumb} />
-        <meta name='twitter:image:alt' content={(data !== undefined && data.res !== undefined)  ?  data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
+        <meta name='twitter:image:alt' content={(data !== undefined && data.res !== undefined) ? data.res?.rec.strMeal.slice(0, 1).toLocaleUpperCase() + data.res.rec.strMeal.slice(1, data.res?.rec.strMeal.length) : ''} />
         <meta name="robots" content="index, follow, imageindex"></meta>
         <meta name="googlebot" content="index, follow, imageindex, max-video-preview:0, max-image-preview:large"></meta>
       </Helmet>
       <main ref={mainRef}>
-        {error && <div>{error}</div>}
+        {error && <div>{error.message}</div>}
         {isLoading && <div className='loading-content'>...Loading</div>}
         {(data !== undefined && data.res !== undefined) &&
           <div className='recipe-discription'>
@@ -170,7 +176,7 @@ export default function Recipe() {
             <div className='recipe-main '>
               <div className={`recipe-video-text ${hideRecipeText}`}>
                 {data.res.rec.strYoutube !== '' &&
-                  <iframe src={data.res.rec.strYoutube} width="560" height="315" frameBorder="0"
+                  <iframe src={data.res.rec.strYoutube.replace('watch?v=', 'embed/')} width="560" height="315" frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin" allowFullScreen title={data.res.rec.strMeal}>
                   </iframe>}
