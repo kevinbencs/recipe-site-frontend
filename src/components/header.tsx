@@ -23,7 +23,7 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
   const hamburgerMenuFocus = useRef<HTMLLabelElement>(null);
   const [dropDownShow, setDropDownShow] = useState<boolean>(false);
   const navigate = useNavigate();
-  const {userName, setName} = useLogged()
+  const {userName, setName, loading} = useLogged()
 
 
   const newsletterShow = () => {
@@ -136,14 +136,19 @@ export default function Header(props: { setNewsletterShown: Dispatcher<boolean>,
           <button className='search-show-button' onClick={handleClickShowSearch} onFocus={() => setDropDownShow(false)}>
             <img src={SearchImg} alt="search" />
           </button>
-          {userName === '' &&
+
+          {loading && 
+            <div>...Loading</div>
+          }
+          
+          {(userName === '' && !loading) &&
             <nav className='signin-signup'>
               <Link to='/signin'>Sign in</Link>
               <Link to='/signup' className='signup'>Sign up</Link>
             </nav>
           }
 
-          {userName !== '' &&
+          {(userName !== '' && !loading) &&
             <div className='dropdown' onMouseEnter={() => setDropDownShow(true)} onMouseLeave={() => setDropDownShow(false)}>
               <button className='dropbtn' onKeyDown={keyDownDropMenu} >{userName}</button>
               {dropDownShow &&
